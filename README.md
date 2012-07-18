@@ -18,3 +18,7 @@ S - toggle sound
 A - toggle anti-aliasing
 T - toggle ghost telemetry and grid
 Esc or Q - quit
+
+Changing the definition of maxspeed near the beginning will adjust the speed of the game to your system.
+
+Mazes and levels can be customized using the tables near the top.
