@@ -19,6 +19,9 @@ Instructions:
 * T - toggle ghost telemetry and grid
 * Esc or Q - quit
 
+To run:
+* java -cp clojure-1.4.0.jar clojure.main pacman.clj
+
 Changing the definition of maxspeed near the beginning will adjust the speed of the game to your system.
 
 Mazes and levels can be customized using the tables near the top.
