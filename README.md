@@ -9,15 +9,15 @@ Some fruit graphics by Mikkel Christensen.
 
 Instructions:
 
- 5 - insert coin
- 1 - start game
- arrow keys - move
- P - pause
- F1 or N - skip to next level
- S - toggle sound
- A - toggle anti-aliasing
- T - toggle ghost telemetry and grid
- Esc or Q - quit
+* 5 - insert coin
+* 1 - start game
+* arrow keys - move
+* P - pause
+* F1 or N - skip to next level
+* S - toggle sound
+* A - toggle anti-aliasing
+* T - toggle ghost telemetry and grid
+* Esc or Q - quit
 
 Changing the definition of maxspeed near the beginning will adjust the speed of the game to your system.
 
