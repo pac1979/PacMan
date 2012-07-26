@@ -14,6 +14,7 @@ Instructions:
 * arrow keys - move
 * P - pause
 * F1 or N - skip to next level
+* F2 - reset
 * S - toggle sound
 * A - toggle anti-aliasing
 * T - toggle ghost telemetry and grid
