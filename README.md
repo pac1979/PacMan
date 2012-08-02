@@ -23,6 +23,9 @@ Instructions:
 To run:
 * java -cp clojure-1.4.0.jar clojure.main pacman.clj
 
-Changing the definition of maxspeed near the beginning will adjust the speed of the game to your system.
+You can pass in a numeric parameter from 1.0 to 20.00 to adjust the speed of the game for your system. Smaller numbers for fast machines, higher number for slower machines. Example:
 
-Mazes and levels can be customized using the tables near the top.
+* java -cp clojure-1.4.0.jar clojure.main pacman.clj 7.5
+
+
+Mazes and levels can be customized using the tables near the top of pacman.clj.
