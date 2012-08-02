@@ -18,7 +18,8 @@
                               AudioFormat AudioFormat$Encoding AudioFileFormat$Type)
            (java.util Date)))
 
-(def maxspeed 5.7) ;; higher for slow machines, lower for fast machines
+(def customspeed (first (map read-string *command-line-args*)))
+(def maxspeed (if customspeed (double customspeed) 5.7)) ;; higher for slow machines, lower for fast machines
 
 (def mazes [[   ; X,x = in pen, ^ = forbidden up for ghosts, * = forbidden with dot, < = horizontal tunnel exits, # = slow areas
 		"                            "
@@ -38,7 +39,7 @@
 		"     ▐·║│   ^  ^   ║│·▌     "
 		"     ▐·║│ ┌▀►--◄▀┐ ║│·▌     "
 		"▄▄▄▄▄┘·└┘ ▌xxXXxx▐ └┘·└▄▄▄▄▄"
-		"<#####·   ▌XXXXXX▐   ·#####<"
+		"<#####·   ▌xXXXXx▐   ·#####<"
 		"▀▀▀▀▀┐·┌┐ ▌xxxxxx▐ ┌┐·┌▀▀▀▀▀"
 		"     ▐·║│ └▄▄▄▄▄▄┘ ║│·▌     "
 		"     ▐·║│          ║│·▌     "
@@ -75,7 +76,7 @@
 		"  ▐·                    ·▌  "
 		"  ▐·┌═══┐ ┌▀►--◄▀┐ ┌═══┐·▌  "
 		"  ▐·║┼──┘ ▌xxXXxx▐ └──╖│·▌  "
-		"  ▐·║│    ▌XXXXXX▐    ║│·▌  "
+		"  ▐·║│    ▌xXXXXx▐    ║│·▌  "
 		"  ▐·║│ ┌┐ ▌xxxxxx▐ ┌┐ ║│·▌  "
 		"▄▄┘·└┘ ║│ └▄▄▄▄▄▄┘ ║│ └┘·└▄▄"
 		"<##·   ║│          ║│   ·##<"
@@ -112,7 +113,7 @@
 		"╙════┐·║│          ║│·┌════╜"
 		"╟────┘·║│ ┌▀►--◄▀┐ ║│·└────╢"
 		"▐······║│ ▌xxXXxx▐ ║│······▌"
-		"▐·┌══┐·└┘ ▌XXXXXX▐ └┘·┌══┐·▌"
+		"▐·┌══┐·└┘ ▌xXXXXx▐ └┘·┌══┐·▌"
 		"▐·└─╖│·   ▌xxxxxx▐   ·║┼─┘·▌"
 		"▐···║│·┌┐ └▄▄▄▄▄▄┘ ┌┐·║│···▌"
 		"╚▀┐·║│·║│          ║│·║│·┌▀╝"
@@ -149,7 +150,7 @@
 		"▐·║│                    ║│·▌"
 		"▐·║╘═┐ ┌┐ ┌▀►--◄▀┐ ┌┐ ┌═╬│·▌"
 		"▐·└──┘ ║│ ▌xxXXxx▐ ║│ └──┘·▌"
-		"▐·     ║│ ▌XXXXXX▐ ║│     ·▌"
+		"▐·     ║│ ▌xXXXXx▐ ║│     ·▌"
 		"▐·┌┐ ┌═╬│ ▌xxxxxx▐ ║╘═┐ ┌┐·▌"
 		"▐·║│ └──┘ └▄▄▄▄▄▄┘ └──┘ ║│·▌"
 		"▐·║│                    ║│·▌"
@@ -186,7 +187,7 @@
 		"  ▐····║│          ║│····▌  "
 		"▄▄┘ ┌┐·║│ ┌▀►--◄▀┐ ║│·┌┐ └▄▄"
 		"<###║│·└┘ ▌xxXXxx▐ └┘·║│###<"
-		"════╬│·   ▌XXXXXX▐   ·║╘════"
+		"════╬│·   ▌xXXXXx▐   ·║╘════"
 		"────╖│·┌┐ ▌xxxxxx▐ ┌┐·║┼────"
 		"<###║│·║│ └▄▄▄▄▄▄┘ ║│·║│###<"
 		"▀▀┐ └┘·║│          ║│·└┘ ┌▀▀"
@@ -223,7 +224,7 @@
 		"▐·║│····║│·  ·······              ·······  ·║│····║│·▌"
 		"▐·║│·┌┐·║│·┌┐·┌═══┐·┌┐ ┌▀►--◄▀┐ ┌┐·┌═══┐·┌┐·║│·┌┐·║│·▌"
 		"▐·└┘·║│·└┘·║│·└───┘·║│ ▌xxXXxx▐ ║│·└───┘·║│·└┘·║│·└┘·▌"
-		"▐····║│····║│···●···║│ ▌XXXXXX▐ ║│···●···║│····║│····▌"
+		"▐····║│····║│···●···║│ ▌xXXXXx▐ ║│···●···║│····║│····▌"
 		"▐·┌══╬╘══┐·║│·┌═══┐·║│ ▌xxxxxx▐ ║│·┌═══┐·║│·┌══╬╘══┐·▌"
 		"▐·└──────┘·║│·└───┘·└┘ └▄▄▄▄▄▄┘ └┘·└───┘·║│·└──────┘·▌"
 		"▐·  ·······║│·······              ·······║│·······  ·▌"
@@ -260,7 +261,7 @@
 		"▐····║│·║│·║│·······║│·        ·║│·······║│·║│·║│····▌"
 		"▐·┌┐·║│·║│·║│·┌┐·┌┐·║│·┌▀►--◄▀┐·║│·┌┐·┌┐·║│·║│·║│·┌┐·▌"
 		"▐·║│·└┘·└┘·└┘·║│·║│·║│·▌xxXXxx▐·║│·║│·║│·└┘·└┘·└┘·║│·▌"
-		"▐·║│··········║│●║│·║│·▌XXXXXX▐·║│·║│●║│··········║│·▌"
+		"▐·║│··········║│●║│·║│·▌xXXXXx▐·║│·║│●║│··········║│·▌"
 		"▐·║╘══┐·┌═══┐·║│·║│·║│·▌xxxxxx▐·║│·║│·║│·┌═══┐·┌══╬│·▌"
 		"▐·└──╖│·└──╖│·║│·║│·└┘·└▄▄▄▄▄▄┘·└┘·║│·║│·║┼──┘·║┼──┘·▌"
 		"▐····║│····║│·║│·║│····        ····║│·║│·║│····║│····▌"
@@ -297,7 +298,7 @@
 		"▐····║│·······║│·║│                ║│·║│·······║│····▌"
 		"▐·┌┐·║╘══┐·┌══╬│·║╘══┐ ┌▀►--◄▀┐ ┌══╬│·║╘══┐·┌══╬│·┌┐·▌"
 		"▐·║│·║┼──┘·└──╖│·└───┘ ▌xxXXxx▐ └───┘·║┼──┘·└──╖│·║│·▌"
-		"▐·║│·║│·······║│····   ▌XXXXXX▐   ····║│·······║│·║│·▌"
+		"▐·║│·║│·······║│····   ▌xXXXXx▐   ····║│·······║│·║│·▌"
 		"▐·║│·║│·┌═══┐·║╘══┐·┌┐ ▌xxxxxx▐ ┌┐·┌══╬│·┌═══┐·║│·║│·▌"
 		"▐·└┘·└┘·└──╖│·└───┘·║│ └▄▄▄▄▄▄┘ ║│·└───┘·║┼──┘·└┘·└┘·▌"
 		"▐··········║│·······║│          ║│·······║│··········▌"
@@ -334,7 +335,7 @@
 		"▐····║│·║│··········║│          ║│··········║│·║│····▌"
 		"▐·┌┐·║│·║╘══┐·┌┐·┌┐·║│ ┌▀►--◄▀┐ ║│·┌┐·┌┐·┌══╬│·║│·┌┐·▌"
 		"▐·║│·└┘·└───┘·║│·║│·└┘ ▌xxXXxx▐ └┘·║│·║│·└───┘·└┘·║│·▌"
-		"▐·║│·········●║│·║│·   ▌XXXXXX▐   ·║│·║│●·········║│·▌"
+		"▐·║│·········●║│·║│·   ▌xXXXXx▐   ·║│·║│●·········║│·▌"
 		"▐·║╘════════┐·║│·║│·┌┐ ▌xxxxxx▐ ┌┐·║│·║│·┌════════╬│·▌"
 		"▐·└────────╖│·║│·└┘·║│ └▄▄▄▄▄▄┘ ║│·└┘·║│·║┼────────┘·▌"
 		"▐··········║│·║│····║│          ║│····║│·║│··········▌"
@@ -371,7 +372,7 @@
 		"▐····  ·║│·║│·······║│          ║│·······║│·║│·  ····▌"
 		"╙══┐·┌┐·║│·║│·┌┐·┌┐·║│ ┌▀►--◄▀┐ ║│·┌┐·┌┐·║│·║│·┌┐·┌══╜"
 		"╟──┘·║│·└┘·└┘·║│·║│·└┘ ▌xxXXxx▐ └┘·║│·║│·└┘·└┘·║│·└──╢"
-		"▐····║│·  ·  ·║│●║│·   ▌XXXXXX▐   ·║│●║│·  ·  ·║│····▌"
+		"▐····║│·  ·  ·║│●║│·   ▌xXXXXx▐   ·║│●║│·  ·  ·║│····▌"
 		"▐·┌┐·║│·┌┐·┌┐·║│·║│·┌┐ ▌xxxxxx▐ ┌┐·║│·║│·┌┐·┌┐·║│·┌┐·▌"
 		"▐·║│·└┘·║│·║│·└┘·└┘·║│ └▄▄▄▄▄▄┘ ║│·└┘·└┘·║│·║│·└┘·║│·▌"
 		"▐·║│·  ·║│·║│·······║│          ║│·······║│·║│·  ·║│·▌"
@@ -408,7 +409,7 @@
 		"▐·║│····║│·║│····║│·║│          ║│·║│····║│·║│····║│·▌"
 		"▐·║╘════╬│·║╘════╬│·║│ ┌▀►--◄▀┐ ║│·║╘════╬│·║╘════╬│·▌"
 		"▐·└──╖┼──┘·└──╖┼──┘·└┘ ▌xxXXxx▐ └┘·└──╖┼──┘·└──╖┼──┘·▌"
-		"▐····║│·······║│····   ▌XXXXXX▐   ····║│·······║│····▌"
+		"▐····║│·······║│····   ▌xXXXXx▐   ····║│·······║│····▌"
 		"╙══┐·║│·┌═══┐·║│·┌═══┐ ▌xxxxxx▐ ┌═══┐·║│·┌═══┐·║│·┌══╜"
 		"╟──┘·└┘·║┼──┘·└┘·└──╖│ └▄▄▄▄▄▄┘ ║┼──┘·└┘·└──╖│·└┘·└──╢"
 		"▐·······║│····  ····║│          ║│····  ····║│·······▌"
@@ -445,7 +446,7 @@
 		"▐················║│·║│          ║│·║│················▌"
 		"╙════════┐·┌┐·┌┐·║│·║│ ┌▀►--◄▀┐ ║│·║│·┌┐·┌┐·┌════════╜"
 		"╟───────╖│·║│·└┘·└┘·└┘ ▌xxXXxx▐ └┘·└┘·└┘·║│·║┼───────╢"
-		"▐·······║│·║│·······   ▌XXXXXX▐   ·······║│·║│·······▌"
+		"▐·······║│·║│·······   ▌xXXXXx▐   ·······║│·║│·······▌"
 		"▐·┌═══┐·║│·║│·┌══════┐ ▌xxxxxx▐ ┌══════┐·║│·║│·┌═══┐·▌"
 		"▐·└───┘·└┘·║│·└──────┘ └▄▄▄▄▄▄┘ └──────┘·║│·└┘·└───┘·▌"
 		"▐··········║│·······              ·······║│··········▌"
@@ -482,7 +483,7 @@
 		"▐·║│·║│··········║│·║│          ║│·║│··········║│·║│·▌"
 		"▐·║│·║│·┌┐·┌┐·┌┐·║│·║│ ┌▀►--◄▀┐ ║│·║│·┌┐·┌┐·┌┐·║│·║│·▌"
 		"▐·└┘·└┘·└┘·║│·└┘·└┘·└┘ ▌xxXXxx▐ └┘·└┘·└┘·║│·└┘·└┘·└┘·▌"
-		"▐··········║│·······   ▌XXXXXX▐   ·······║│··········▌"
+		"▐··········║│·······   ▌xXXXXx▐   ·······║│··········▌"
 		"▐·┌═══┐·┌══╬╘══┐·┌═══┐ ▌xxxxxx▐ ┌═══┐·┌══╬╘══┐·┌═══┐·▌"
 		"▐·└───┘·└──╖┼──┘·└───┘ └▄▄▄▄▄▄┘ └───┘·└──╖┼──┘·└───┘·▌"
 		"▐··········║│·······              ·······║│··········▌"
@@ -504,35 +505,35 @@
 
  ;; Images for fruits and artwork
 (def image-files {:pac-art "pacman.png"
-                  :monster-art "monster.png"
-                  :cherry "cherryhd.png"
-                  :strawberry "strawberryhd.png"
-                  :orange "orangehd.png"
-                  :apple "applehd.png"
-                  :greenapple "greenapplehd.png"
-                  :lime "limehd.png"
-                  :lemon "lemonhd.png"
-                  :kiwi "kiwihd.png"
-                  :donut "donuthd.png"
-                  :coffee "coffeehd.png"
-                  :galaxian "galaxianhd.png"
-                  :bell "bellhd.png"
-                  :fruitkey "keyhd.png"
-                  :pretzel "pretzelhd.png"
-                  :pear "pearhd.png"
-                  :banana "bananahd.png"
-                  :trike "trikehd.png"
-                  :kite "kite.png"
-                  :drum "drum.png"
-                  :balloon "balloon.png"
-                  :train "train.png"
-                  :kitty "kitty.png"
-                  :beer "beer.png"
-                  :ry "ry.png" :ey "ey.png" :ay "ay.png" :dy "dy.png" :yy "yy.png" :exy "exy.png"
-                  :gr "gr.png" :ar "ar.png" :mr "mr.png" :er "er.png" :or "or.png" :vr "vr.png" :rr "rr.png"
-                  :1w "1w.png" :2w "2w.png" :uw "uw.png" :pw "pw.png" :hw "hw.png" :iw "iw.png" :gw "gw.png"
-                  :sw "sw.png" :cw "cw.png" :ow "ow.png" :rw "rw.png" :ew "ew.png" :dw "dw.png" :tw "tw.png"
-                  :pc "pc.png" :lc "lc.png" :ac "ac.png" :yc "yc.png" :ec "ec.png" :rc "rc.png" :oc "oc.png" :nc "nc.png" :tc "tc.png" :wc "wc.png"})
+					:monster-art "monster.png"
+					:cherry "cherryhd.png"
+					:strawberry "strawberryhd.png"
+					:orange "orangehd.png"
+					:apple "applehd.png"
+					:greenapple "greenapplehd.png"
+					:lime "limehd.png"
+					:lemon "lemonhd.png"
+					:kiwi "kiwihd.png"
+					:donut "donuthd.png"
+					:coffee "coffeehd.png"
+					:galaxian "galaxianhd.png"
+					:bell "bellhd.png"
+					:fruitkey "keyhd.png"
+					:pretzel "pretzelhd.png"
+					:pear "pearhd.png"
+					:banana "bananahd.png"
+					:trike "trikehd.png"
+					:kite "kitehd.png"
+					:drum "drumhd.png"
+					:balloon "balloonhd.png"
+					:train "trainhd.png"
+					:kitty "kittyhd.png"
+					:beer "beerhd.png"
+					:ry "ry.png" :ey "ey.png" :ay "ay.png" :dy "dy.png" :yy "yy.png" :exy "exy.png"
+					:gr "gr.png" :ar "ar.png" :mr "mr.png" :er "er.png" :or "or.png" :vr "vr.png" :rr "rr.png"
+					:1w "1w.png" :2w "2w.png" :uw "uw.png" :pw "pw.png" :hw "hw.png" :iw "iw.png" :gw "gw.png"
+					:sw "sw.png" :cw "cw.png" :ow "ow.png" :rw "rw.png" :ew "ew.png" :dw "dw.png" :tw "tw.png"
+					:pc "pc.png" :lc "lc.png" :ac "ac.png" :yc "yc.png" :ec "ec.png" :rc "rc.png" :oc "oc.png" :nc "nc.png" :tc "tc.png" :wc "wc.png"})
 
 (defn get-current-directory []
   (str (. (java.io.File. ".") getCanonicalPath) "/"))
@@ -544,37 +545,37 @@
 
 ;; Custom colors
 (def game-colors {:mazeblue (new Color 33 32 222)
-							:ghostblue (new Color 33 32 222)
-							:peach (new Color 255 186 148)
-							:pinkypink (new Color 255 184 222)
-							:mspacblue (new Color 66 186 222)
-							:mspacbrown (new Color 222 150 66)
-							:jrpacbrown (new Color 184 104 0)
-							:jrpacblue (new Color 71 184 222)
-							:jrpacgreen (new Color 0 104 0)
-							:graydots (new Color 222 223 222)
-							:clydeorange (new Color 255 184 0)
-							:yellorange (new Color 255 184 71)
-							:purple (new Color 110 0 222)
-							:darkgray (new Color 31 31 31)
-							:brown (new Color 123 65 27)
-							:kelly (new Color 38 203 13)
-							:woody (new Color 162 68 4)
-							:glow (new Color 99 255 204)
-					        :yellow Color/YELLOW
-					        :red Color/RED
-					        :cyan (new Color 0 255 222)
-					        :black Color/BLACK
-			                :white Color/WHITE
-					        :green Color/GREEN
-			                :blue Color/BLUE})
+					:ghostblue (new Color 33 32 222)
+					:peach (new Color 255 186 148)
+					:pinkypink (new Color 255 184 222)
+					:mspacblue (new Color 66 186 222)
+					:mspacbrown (new Color 222 150 66)
+					:jrpacbrown (new Color 184 104 0)
+					:jrpacblue (new Color 71 184 222)
+					:jrpacgreen (new Color 0 104 0)
+					:graydots (new Color 222 223 222)
+					:clydeorange (new Color 255 184 0)
+					:yellorange (new Color 255 184 71)
+					:purple (new Color 110 0 222)
+					:darkgray (new Color 31 31 31)
+					:brown (new Color 123 65 27)
+					:kelly (new Color 38 203 13)
+					:woody (new Color 162 68 4)
+					:glow (new Color 99 255 204)
+					:yellow Color/YELLOW
+					:red Color/RED
+					:cyan (new Color 0 255 222)
+					:black Color/BLACK
+					:white Color/WHITE
+					:green Color/GREEN
+					:blue Color/BLUE})
 
 (def levels [;; Pac-Man
              {:level  1, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :cherry,     :fruitpoints  100, :pacspeed 0.80, :pacdotspeed 0.71, :ghostspeed 0.75, :ghosttunnelspeed 0.40, :elroy1dots  20 :elroy1speed 0.80 :elroy2dots 10 :elroy2speed 0.85 :frightpacspeed 0.90 :frightpacdotspeed 0.79 :frightghostspeed 0.50 :frighttime 6 :intermission nil}
-             ;{:level  2,  :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :strawberry, :fruitpoints  300, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  30 :elroy1speed 0.90 :elroy2dots 15 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 5 :intermission nil}
-             ;{:level  3,  :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :orange,     :fruitpoints  500, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  40 :elroy1speed 0.90 :elroy2dots 20 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 4 :intermission 1}
-             ;{:level  4,  :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :orange,     :fruitpoints  500, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  40 :elroy1speed 0.90 :elroy2dots 20 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 3 :intermission nil}
-             ;{:level  5,  :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :apple,      :fruitpoints  700, :pacspeed 1.00, :pacdotspeed 0.87, :ghostspeed 0.95, :ghosttunnelspeed 0.50, :elroy1dots  40 :elroy1speed 1.00 :elroy2dots 20 :elroy2speed 1.05 :frightpacspeed 1.00 :frightpacdotspeed 0.87 :frightghostspeed 0.60 :frighttime 2 :intermission nil}
+             {:level  2,  :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :strawberry, :fruitpoints  300, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  30 :elroy1speed 0.90 :elroy2dots 15 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 5 :intermission nil}
+             {:level  3,  :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :orange,     :fruitpoints  500, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  40 :elroy1speed 0.90 :elroy2dots 20 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 4 :intermission 1}
+             {:level  4,  :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :orange,     :fruitpoints  500, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  40 :elroy1speed 0.90 :elroy2dots 20 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 3 :intermission nil}
+             {:level  5,  :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :apple,      :fruitpoints  700, :pacspeed 1.00, :pacdotspeed 0.87, :ghostspeed 0.95, :ghosttunnelspeed 0.50, :elroy1dots  40 :elroy1speed 1.00 :elroy2dots 20 :elroy2speed 1.05 :frightpacspeed 1.00 :frightpacdotspeed 0.87 :frightghostspeed 0.60 :frighttime 2 :intermission nil}
 
              ;; Ms. Pac-Man
              ;;{:level  2,  :style :pacman :maze  1, :mazecolor :red,           :solidcolor :peach,    :dotcolor :graydots,       :fruit :cherry,      :fruitpoints  100, :pacspeed 0.90, :pacdotspeed 0.83, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  30 :elroy1speed 0.90 :elroy2dots 15 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 5 :intermission nil}
@@ -588,7 +589,7 @@
 
              ;; Jr. Pac-Man
              {:level  6, :style :jrpacman :maze  5, :mazecolor :clydeorange,   :solidcolor :mazeblue,  :dotcolor :peach,       :fruit :trike,      :fruitpoints  100,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
-             {:level  7, :style :jrpacman :maze  6, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kite,      :fruitpoints  300,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+			 {:level  7, :style :jrpacman :maze  6, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kite,      :fruitpoints  200,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
              {:level  8, :style :jrpacman :maze  7, :mazecolor :clydeorange,    :solidcolor :jrpacblue,  :dotcolor :yellow,       :fruit :drum,      :fruitpoints  500,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
              {:level  9, :style :jrpacman :maze  8, :mazecolor :yellow,        :solidcolor :jrpacgreen,  :dotcolor :white,       :fruit :balloon,      :fruitpoints  700,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
              {:level 10, :style :jrpacman :maze  9, :mazecolor :cyan,        :solidcolor :mazeblue,  :dotcolor :white,       :fruit :train,      :fruitpoints  1000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
@@ -624,41 +625,41 @@
 
 ;; Sound effects
 (def sound-files {:pacman { :intro "intro.wav"
-			                :intermission "intermission.wav"
-			                :dot1 "dot1.wav"
-			                :dot2 "dot2.wav"
-							:fruit "fruit.wav"
-							:ghost "ghost.wav"
-							:bonus "bonus.wav"
-							:death "death.wav"
-							:siren "siren.wav"
-							:eyes "eyes.wav"
-							:energizer "energizer.wav"
-							:credit "credit.wav"}
-				:mspacman { :intro "msintro.wav"
-			                :intermission "intermission.wav"
-			                :dot1 "msdot1.wav"
-			                :dot2 "msdot1.wav"
-							:fruit "fruit.wav"
-							:ghost "msghost.wav"
-							:bonus "bonus.wav"
-							:death "msdeath.wav"
-							:siren "mssiren.wav"
-							:eyes "mseyes.wav"
-							:energizer "msenergizer.wav"
-							:credit "credit.wav"}
-				:jrpacman { :intro "jrintro.wav"
-					        :intermission "intermission.wav"
-			                :dot1 "jrdot1.wav"
-			                :dot2 "jrdot1.wav"
-							:fruit "fruit.wav"
-							:ghost "jrghost.wav"
-							:bonus "bonus.wav"
-							:death "jrdeath.wav"
-							:siren "jrsiren.wav"
-							:eyes "jreyes.wav"
-							:energizer "jrenergizer.wav"
-							:credit "credit.wav"}})
+														:intermission "intermission.wav"
+														:dot1 "dot1.wav"
+														:dot2 "dot2.wav"
+														:fruit "fruit.wav"
+														:ghost "ghost.wav"
+														:bonus "bonus.wav"
+														:death "death.wav"
+														:siren "siren.wav"
+														:eyes "eyes.wav"
+														:energizer "energizer.wav"
+														:credit "credit.wav"}
+								:mspacman { :intro "msintro.wav"
+														:intermission "intermission.wav"
+														:dot1 "msdot1.wav"
+														:dot2 "msdot1.wav"
+														:fruit "fruit.wav"
+														:ghost "msghost.wav"
+														:bonus "bonus.wav"
+														:death "msdeath.wav"
+														:siren "mssiren.wav"
+														:eyes "mseyes.wav"
+														:energizer "msenergizer.wav"
+														:credit "credit.wav"}
+								:jrpacman { :intro "jrintro.wav"
+														:intermission "intermission.wav"
+														:dot1 "jrdot1.wav"
+														:dot2 "jrdot1.wav"
+														:fruit "fruit.wav"
+														:ghost "jrghost.wav"
+														:bonus "bonus.wav"
+														:death "jrdeath.wav"
+														:siren "jrsiren.wav"
+														:eyes "jreyes.wav"
+														:energizer "jrenergizer.wav"
+														:credit "credit.wav"}})
 
 (defn wav-file
   "Returns the pathname of a specific wav file for a given level style and sound effect"
@@ -673,17 +674,13 @@
         buffer-stream (BufferedInputStream. (FileInputStream. the-file))
         audio-stream (AudioInputStream. buffer-stream audio-format (.length the-file))
         clip (AudioSystem/getLine (DataLine$Info. Clip audio-format))]
-    (doto clip (.open audio-stream)
-               #_(.mark)
-				       (.start)
-               #_(.reset))))
+    (doto clip (.open audio-stream) (.start))))
 
 (defn play-sound
   "Plays a specific sound effect in a background thread"
   [g the-sound]
   (when (@g :sound)
-    (future (play-file (wav-file (@g :style) the-sound)))
-    #_(future (play-clip the-sound))))
+    (future (play-file (wav-file (@g :style) the-sound)))))
 
 (def invalid-target 999999)
 
@@ -814,15 +811,12 @@
   [t]
   (some #(= t %) ["·" " " "X" "#" "●" "^" "*" "<" "-"]))
 
-;(defn nm-mazetile [m r c]
 (defn mazetile
   "Returns the contents of the maze tile at row, col"
   [m r c]
   (if (and (>= r 0) (>= c 0) (< r (count m)) (< c (count (first m)))) ; bounds check
     (str (nth (nth m r) c))
-	  "~"))
-
-;(def mazetile (memoize nm-mazetile))
+    "<")) ; tunnel if off-grid
 
 (defn in-pen?
   "Returns whether actor is in pen"
@@ -830,7 +824,7 @@
   (let [r (ytorow g (@a :y))
         c (xtocol g (@a :x))
         t (mazetile (@g :maze) r c)]
-	  (or (= t "X") (= t "x") (= t "-"))))
+	  (or (= t "X") (= t "x"))))
 
 (defn entering-pen? [g d r c]
   (let [mid (@g :midc)]
@@ -857,9 +851,7 @@
                           50) ; 50 points per energizer
                   (@g :score1)) 1)
   (swap! a assoc :waka (not (@a :waka)) :dotr r :dotc c) ; toggle "waka-waka" munching sound
-  (if (@a :waka)
-    (play-sound g :dot1)
-    (play-sound g :dot2))
+  (play-sound g (if (@a :waka) :dot1 :dot2))
   (let [newdots (replace {[r c] []} (@g :dots))]
     ;; Replace gameboard dots
     (println (str "Pac-Man ate " (if (not= t "●") "a dot" "an energizer") " at " r "," c))
@@ -896,18 +888,6 @@
 					                   (= ad :left) :up
 					                   (= ad :right) :down))))
 
-(defn my-nexttile
-  "Returns the contents of the next adjacent tile in the actor's given translated direction"
-  [g a d]
-  (let [c (xtocol g (@a :x))
-        r (ytorow g (@a :y))
-        td (translate-direction a d)
-        nc (+ c (xoffset td 1))
-        nr (+ r (yoffset td 1))]
-    (if (and (>= nc 0) (>= nr 0) (< nc (@g :mazecolumns)) (< nr (@g :mazerows)))
-      (mazetile (@g :maze) nr nc)
-      "~")))
-
 (defn nexttile
   "Returns the contents of the next adjacent tile in the actor's given direction"
   [g a d]
@@ -915,9 +895,12 @@
         r (ytorow g (@a :y))
         nc (+ c (xoffset d 1))
         nr (+ r (yoffset d 1))]
-    (if (and (>= nc 0) (>= nr 0) (< nc (@g :mazecolumns)) (< nr (@g :mazerows)))
-      (mazetile (@g :maze) nr nc)
-      "~")))
+	  (mazetile (@g :maze) nr nc)))
+
+(defn my-nexttile
+  "Returns the contents of the next adjacent tile in the actor's given relative direction"
+  [g a d]
+  (nexttile g a (translate-direction a d)))
 
 (defn center-of-tile-x
   "Returns the center x pixel of the tile at x"
@@ -938,27 +921,30 @@
 		(or (and (or (= d :up)   (= d :down))  (= y (center-of-tile-y g y)))
 		    (and (or (= d :left) (= d :right)) (= x (center-of-tile-x g x))))))
 
+(defn center-tolerance?
+  "Returns whether coordinate within tolerance of center for given directions"
+  [d1 d2 d v cv n]
+	(and (or (= d d1) (= d d2))
+			 (and (< v (+ cv n))
+            (> v (- cv n)))))
+
 (defn near-center-of-tile?
   "Returns whether given actor is currently within n pixels of the center of its tile"
   [g a n]
   (let [d (@a :d)
         x (@a :x)
         y (@a :y)
-        cy (center-of-tile-y g y)
-        cx (center-of-tile-x g x)]
-		(or (and (or (= d :up)   (= d :down))  (and (< y (+ cy n))
-	                                              (> y (- cy n))))
-		    (and (or (= d :left) (= d :right)) (and (< x (+ cx n))
-                                                (> x (- cx n)))))))
+        cx (center-of-tile-x g x)
+        cy (center-of-tile-y g y)]
+		(or (center-tolerance? :up :down d y cy n)
+	      (center-tolerance? :left :right d x cx n))))
 
-(defn my-openpath?
-  "Returns whether path open for actor's given translated direction"
-  [g a d]
-  (let [n (my-nexttile g a d)
-        r (ytorow g (@a :y))
-        c (xtocol g (@a :x))]
-		(and (path-tile? n) ; Only defined tiles
-	       (not (entering-pen? g d r c))))) ; Do not let Pac-Man enter pen
+(defn ghost-valid-tile?
+  "Returns whether the tile is valid for the ghost to travel on"
+  [g a d r c n]
+  (and (path-tile? n) ; Only defined tiles
+       (or (= (@a :mode) :frightened) (= (@a :mode) :reincarnate) (not (forbidden? (@g :maze) d r c))) ; Not forbidden path for regular ghosts
+       (or (= (@a :mode) :reincarnate) (not (entering-pen? g d r c))))) ; Do not let ghosts re-enter pen
 
 (defn ghost-my-openpath?
   "Returns whether path open for ghost's given relative direction"
@@ -966,30 +952,12 @@
   (let [r (ytorow g (@a :y))
         c (xtocol g (@a :x))
         td (translate-direction a d)
-        
-        ; Coordinates of tile in current traveling direction
-        nr (+ r (yoffset (@a :d) 1))
+        nr (+ r (yoffset (@a :d) 1)) ; Coordinates of tile in current traveling direction
         nc (+ c (xoffset (@a :d) 1))
-        
-        ; Coordinates of tile in given direction
-        nrt (+ nr (yoffset td 1))
+        nrt (+ nr (yoffset td 1)) ; Coordinates of tile in given direction
         nct (+ nc (xoffset td 1))
-        
-        ; The contents of the tile
-        n (mazetile (@g :maze) nrt nct)]
-
-    (and (path-tile? n) ; Only defined tiles
-         (or (= (@a :mode) :frightened) (= (@a :mode) :reincarnate) (not (forbidden? (@g :maze) td nr nc))) ; Not forbidden path for regular ghosts
-	       (or (= (@a :mode) :reincarnate) (not (entering-pen? g td nr nc)))))) ; Do not let ghosts re-enter pen
-
-(defn openpath?
-  "Returns whether path open for actor's given direction"
-  [g a d]
-  (let [n (nexttile g a d)
-        r (ytorow g (@a :y))
-        c (xtocol g (@a :x))]
-    (and (path-tile? n) ; Only defined tiles
-         (or (= (@a :mode) :reincarnate) (not (entering-pen? g d r c)))))) ; Do not re-enter pen
+        n (mazetile (@g :maze) nrt nct)] ; The contents of the tile
+    (ghost-valid-tile? g a td nr nc n)))
 
 (defn ghost-openpath?
   "Returns whether path open for actor's given direction"
@@ -997,9 +965,17 @@
   (let [n (nexttile g a d)
         r (ytorow g (@a :y))
         c (xtocol g (@a :x))]
-    (and (path-tile? n) ; Only defined tiles
-         (or (= (@a :mode) :frightened) (= (@a :mode) :reincarnate) (not (forbidden? (@g :maze) d r c))) ; Not forbidden path for regular ghosts
-         (or (= (@a :mode) :reincarnate) (not (entering-pen? g d r c)))))) ; Do not re-enter pen
+    (ghost-valid-tile? g a d r c n)))
+
+(defn pacman-openpath?
+  "Returns whether path open for actor's given direction"
+  [g a d]
+  (let [n (nexttile g a d)
+        r (ytorow g (@a :y))
+        c (xtocol g (@a :x))]
+    (and (or (or (= d :left) (= d :right)) (and (> c 0) (< c (@g :mazecolumns)))) ; cannot turn up and down when deep in tunnel
+         (path-tile? n) ; Only defined tiles
+         (not (entering-pen? g d r c))))) ; Do not let Pac-Man enter pen
 
 (defn set-actor-position [a x y]
 	(swap! a assoc :x x :y y))
@@ -1023,39 +999,36 @@
 
 (defn straighten?
   "Centers actor within path"
-  [g a d]
+  [g a]
 	(let [x (@a :x)
 			  y (@a :y)
+        d (@a :d)
         r (ytorow g y)
         c (xtocol g x)
         mid (@g :midc)]
-	  (when (= (@g :paused) :none)
+	  (when (some #(= (@g :paused) %) [:none :eat-blinky :eat-pinky :eat-inky :eat-clyde])
 		  (if (or (= d :left) (= d :right))
 				(set-actor-position a x (rowtoy g r))
-	      (set-actor-position a (if (and (not= (@a :mode) :reincarnate) (>= r 15) (<= r 17) (or (= c mid) (= c (dec mid)))) (@g :midx) (coltox g c)) y)))))
+	      (set-actor-position a (if (and (not= (@a :mode) :reincarnate) (>= r 15) (<= r 17) (or (= c mid) (= c (dec mid))))
+																(@g :midx) ; special case for leaving pen
+								                (coltox g c)) y)))))
 
 (defn set-ghost-direction?
   "Tries to turn ghost in given direction if path open"
   [g a d]
-  (if (ghost-openpath? g a d)
-    (do (set-actor-direction a d)
-			  ;; Straighten out ghost relative to maze path
-	      (straighten? g a d)
-	      true)
-    false))
+  (when (ghost-openpath? g a d)
+    (set-actor-direction a d)
+    (straighten? g a)))
 
 (defn set-pacman-direction?
   "Tries to turn Pac-Man in given direction if path open and near center of tile"
   [g a d]
   (let [r (ytorow g (@a :y))
         c (xtocol g (@a :x))]
-	  (if (and (openpath? g a d) ; Path must be open to turn that way
-			       (or (opposite-direction? d (@a :d)) (near-center-of-tile? g a (* (@a :s) 3)))) ; Must be near center of tile to turn, unless reversing
-	    (do (set-actor-direction a d)
-				  ;; Straighten out Pac-Man relative to maze path
-		      (straighten? g a d)
-				  true)
-		  false)))
+	  (when (and (pacman-openpath? g a d) ; Path must be open to turn that way
+				       (or (opposite-direction? d (@a :d)) (near-center-of-tile? g a (* (@a :s) 3)))) ; Must be near center of tile to turn, unless reversing
+	    (set-actor-direction a d)
+      (straighten? g a))))
 
 (defn new-ghost-tile?
   "Determines whether the ghost is in a new tile now"
@@ -1074,8 +1047,7 @@
     ;; Calculate a reverse turn, in case opposite direction is blocked (i.e. corner)
 		(cond (ghost-openpath? g a nd) (swap! a assoc :nd nd :lastrow 0 :lastcol 0) ; force recalc at next tile center
 	        (ghost-my-openpath? g a :left) (swap! a assoc :d (translate-direction a :left) :nd (translate-direction a :left) :lastrow 0 :lastcol 0)
-	        (ghost-my-openpath? g a :right) (swap! a assoc :d (translate-direction a :right) :nd (translate-direction a :right) :lastrow 0 :lastcol 0)
-          :default (println "What to do..."))
+	        (ghost-my-openpath? g a :right) (swap! a assoc :d (translate-direction a :right) :nd (translate-direction a :right) :lastrow 0 :lastcol 0))
     (println (str (name (@a :nickname)) " reversed direction from " (name od) " to " (name (@a :nd)))))))
 
 (defn set-ghost-mode
@@ -1126,10 +1098,8 @@
         ttc (cond (= m :reincarnate) (dec mid) ; Return to pen
                  
                  ;; Home corners
-				         (and (= n :shadow) (= m :scatter) (= (elroy-level g) 0)) (- (@g :mazecolumns) 3) ; Go to home corner every so often
-                 (and (= n :speedy) (= m :scatter)) 2
-                 (and (= n :bashful) (= m :scatter)) (dec (@g :mazecolumns))
-                 (and (= n :pokey) (= m :scatter)) 0
+				         (and (= n :shadow) (= m :scatter) (= (elroy-level g) 0)) (@a :homec) ; Go to home corner every so often (except Cruise Elroy)
+                 (and (not= n :shadow) (= m :scatter)) (@a :homec)
                  
                  ;; Individual "personalities"
 		             (and (= n :speedy) (= pd :up)) (- pc 4) ; Reproduces Pinky's erratic bug, targeting four tiles to the left if Pac-Man faces up
@@ -1141,10 +1111,8 @@
                  :default pc) ; Shadow targets Pac-Man directly
         ttr (cond (= m :reincarnate) 17
                  
-                 (and (= n :shadow) (= m :scatter) (= (elroy-level g) 0)) 0
-                 (and (= n :speedy) (= m :scatter)) 0
-                 (and (= n :bashful) (= m :scatter)) (- (@g :mazerows) 2)
-                 (and (= n :pokey) (= m :scatter)) (- (@g :mazerows) 2)
+                 (and (= n :shadow) (= m :scatter) (= (elroy-level g) 0)) (@a :homer)
+                 (and (not= n :shadow) (= m :scatter)) (@a :homer)
                  
                  (= n :speedy) (+ pr (yoffset pd 4))
                  (= n :bashful) (- pr (- (ytorow g (@b :y)) (+ pr (yoffset pd 2))))
@@ -1171,18 +1139,15 @@
         y (@a :y)
         r (ytorow g y)
         c (xtocol g x)
-        d (@a :d)]
-	  (if (= (mazetile (@g :maze) r c) "<")
-	   (if (and (= d :left) (= c 0))
-	     (do (set-actor-position a (coltox g (dec (@g :mazecolumns))), y)
-		       (println (str (name (@a :nickname)) " went through the left tunnel"))
-	         true)
-		   (if (and (= d :right) (= c (dec (@g :mazecolumns))))
-		     (do (set-actor-position a (coltox g 0), y)
-			       (println (str (name (@a :nickname)) " went through the right tunnel"))
-		         true)
-         nil))
-	    nil)))
+        d (@a :d)
+        tunnel-depth 3] ; tunnel invisibly extends 3 tiles off-grid
+	  (when (= (mazetile (@g :maze) r c) "<")
+	   (if (and (= d :left) (= c (- tunnel-depth)))
+	     (do (set-actor-position a (coltox g (dec (+ tunnel-depth (dec (@g :mazecolumns))))), y)
+		       (println (str (name (@a :nickname)) " went through the left tunnel")))
+		   (when (and (= d :right) (= c (+ tunnel-depth (dec (@g :mazecolumns)))))
+		     (set-actor-position a (inc (- (coltox g 0) tunnel-depth)), y)
+	       (println (str (name (@a :nickname)) " went through the right tunnel")))))))
 
 (defn stuck-in-wall?
   "Determines if actor is stuck in wall"
@@ -1255,7 +1220,7 @@
 
                               (and (<= ld rd) (<= ld fd)) (translate-direction a :left) ; turn left
 															(and (<= rd ld) (<= rd fd)) (translate-direction a :right) ; turn right
-															(and (<= fd ld) (<= fd rd)) d ; keep going straight
+															(and (<= fd ld) (<= fd rd)) d ; keep going forward
 															:default :up)]
 
       (when (not= (@a :nd) new-direction)
@@ -1266,12 +1231,6 @@
    This is essentially a controller function that decides when to make decisions
    and when to update the physical ghost location."
   [g a p b]
-  ;; Evaluate forced turns or potential turns at intersection
-  (when (and (near-center-of-tile? g a (* (@a :s) 2)) ; must be near center of tile
-             (new-ghost-tile? g a)) ; must be in a different tile than last time
-    (turn-ghost g a p b))
-
-  ;; Move ghost
   (let [c (xtocol g (@a :x))
         r (ytorow g (@a :y))
         level (nth levels (dec (@g :level)))
@@ -1285,31 +1244,38 @@
                  :default (@a :s))
         pen-timeout (or (and (< (@g :level) 5) (> (elapsed g :dotclock) 4))
                         (and (>= (@g :level) 5) (> (elapsed g :dotclock) 3)))]
-	  
-    (when (or pen-timeout
-              (>= (@g :globaldots) (@a :dotlimit))
-              (and (< (@g :globaldots) 0) (<= (@a :dotcount) 0))) ; Don't leave pen until Pac-Man has eaten enough dots
-      (when pen-timeout
-        (println "Releasing the next ghost!")
-        (swap! g assoc :globaldots (+ (@g :globaldots) 10)) ; force the ghosts out of the pen over time if not enough dots eaten
-        (swap! g assoc :dotclock (now)))
-	    (set-actor-position a
-												  (+ (@a :x) (actor-xoffset a gs))
-												  (+ (@a :y) (actor-yoffset a gs)))
 
-      (when (stuck-in-wall? g a)
-        (while (stuck-in-wall? g a) ; Back up if embedded in wall
-          (set-actor-position a
-                              (- (@a :x) (actor-xoffset a 1))
-                              (- (@a :y) (actor-yoffset a 1))))
-		    (println (str (name (@a :nickname)) " got unstuck!!!"))
-        (reverse-ghost-direction? g a))
+  ;; Evaluate forced turns or potential turns at intersection
+  (when (and (near-center-of-tile? g a (* (@a :s) 2)) ; must be near center of tile
+             (new-ghost-tile? g a) ; must be in a different tile than last time
+             (> c 0) (< c (dec (@g :mazecolumns)))) ; must not be in tunnel
+    (turn-ghost g a p b))
 
-		  ;; Check for tunnel exit  
-		  (tunnel-exit-check?! g a))
+  ;; Move ghost
+  (when (or pen-timeout
+            (>= (@g :globaldots) (@a :dotlimit))
+            (and (< (@g :globaldots) 0) (<= (@a :dotcount) 0))) ; Don't leave pen until Pac-Man has eaten enough dots
+    (when pen-timeout
+      (println "Releasing the next ghost!")
+      (swap! g update-in [:globaldots] + 10) ; force the ghosts out of the pen over time if not enough dots eaten
+      (swap! g assoc :dotclock (now)))
+    (set-actor-position a
+											  (+ (@a :x) (actor-xoffset a gs))
+											  (+ (@a :y) (actor-yoffset a gs)))
+
+    (when (stuck-in-wall? g a)
+      (while (stuck-in-wall? g a) ; Back up if embedded in wall
+        (set-actor-position a
+                            (- (@a :x) (actor-xoffset a 1))
+                            (- (@a :y) (actor-yoffset a 1))))
+	    (println (str (name (@a :nickname)) " got unstuck!!!"))
+      (reverse-ghost-direction? g a))
+
+	  ;; Check for tunnel exit  
+	  (tunnel-exit-check?! g a))
 
   ;; If in pen, get out
-  (when (and (not= (@a :mode) :reincarnate) (in-pen? g a) (> (ytorow g (@a :y)) 15) (> (@a :x) (- (@g :midx) (/ (@g :tilesize) 2))) (< (@a :x) (+ (@g :midx) (/ (@g :tilesize) 2))))
+  (when (and (not= (@a :mode) :reincarnate) (in-pen? g a) (> (@a :x) (- (@g :midx) (/ (@g :halftile) 2))) (< (@a :x) (+ (@g :midx) (/ (@g :halftile) 2))))
     (swap! a assoc :nd :up)
     (set-actor-direction a :up))))
 
@@ -1330,38 +1296,30 @@
                 (< bs (:frighttime level)) (* maxspeed (:frightpacspeed level))  ; speed up during blue time
                 :default (@a :s))  ; normal speed
 				td (translate-direction a :forward)
-			  nx (+ x (actor-xoffset a (@g :tilesize)))
-			  ny (+ y (actor-yoffset a (@g :tilesize)))
-        nc (xtocol g nx)
-        nr (ytorow g ny)
-				n (if (and (>= nc 0) (>= nr 0) (< nc (@g :mazecolumns)) (< nr (@g :mazerows)))
-					  (mazetile (@g :maze) nr nc)
-					  "~")
-			  clear-path (and (path-tile? n) ; Only defined tiles
-												(not (entering-pen? g td r c)))]
+        nr (+ r (actor-yoffset a 1))
+        nc (+ c (actor-xoffset a 1))
+				n (mazetile (@g :maze) nr nc)
+			  clear-path (path-tile? n)] ; Only defined tiles
       (if (or clear-path (not (near-center-of-tile? g a 3))) ; Only stop if near center of tile
-       (do
-         ;; Move forward
-         (when (not (@a :parked))
-					(if clear-path
-						(set-actor-position a
-															(+ x (actor-xoffset a s))
-															(+ y (actor-yoffset a s)))
-						(set-actor-position a
-														(+ x (min (actor-xoffset a s) (abs (- (coltox g c) x))))
-														(+ y (min (actor-yoffset a s) (abs (- (rowtoy g r) y)))))))
-         
-         ;; Wall check
-         (when (stuck-in-wall? g a)
-           (while (stuck-in-wall? g a) ; Back up if embedded in wall
-             (set-actor-position a
-                                 (- (@a :x) (actor-xoffset a 1))
-                                 (- (@a :y) (actor-yoffset a 1))))
-			     (park-pacman! g a))
-         ;; Tunnel check
-	       (tunnel-exit-check?! g a)
-	       (swap! a assoc :parked nil)
-				 true)
+				(do
+	         ;; Move forward
+					(when (not (@a :parked))
+						(let [xo (actor-xoffset a s)
+			            yo (actor-yoffset a s)]
+							(set-actor-position a
+																	(+ x (if clear-path xo (min xo (abs (- (coltox g c) x)))))
+																	(+ y (if clear-path yo (min yo (abs (- (rowtoy g r) y))))))))
+	         
+	         ;; Wall check
+	         (when (stuck-in-wall? g a)
+	           (while (stuck-in-wall? g a) ; Back up if embedded in wall
+	             (set-actor-position a
+	                                 (- (@a :x) (actor-xoffset a 1))
+	                                 (- (@a :y) (actor-yoffset a 1))))
+				     (park-pacman! g a))
+	         ;; Tunnel check
+		       (tunnel-exit-check?! g a)
+		       (swap! a assoc :parked nil))
        (park-pacman! g a))))
 
 (defn collide?
@@ -1384,8 +1342,8 @@
   [g a]
   (and (= (@a :mode) :reincarnate) (= (xtocol g (@a :x)) (dec (@g :midc))) (= (ytorow g (@a :y)) 17)))
 
-(defstruct ghost :nickname :c :dotlimit :dotcount :x :y :lastrow :lastcol :d :nd :s :mode :tx :ty)
-(defn new-ghost [& [n c dotlimit dotcount x y lastrow lastcol d nd s mode tx ty]] (atom (struct ghost n c dotlimit dotcount x y lastrow lastcol d nd s mode tx ty)))
+(defstruct ghost :nickname :c :dotlimit :dotcount :x :y :lastrow :lastcol :d :nd :s :mode :tx :ty :homer :homec :eatpause)
+(defn new-ghost [& [n c dotlimit dotcount x y lastrow lastcol d nd s mode tx ty homer homec eatpause]] (atom (struct ghost n c dotlimit dotcount x y lastrow lastcol d nd s mode tx ty homer homec eatpause)))
 
 (defstruct pacman :nickname :x :y :d :s :dotr :dotc :parked :waka)
 (defn new-pacman [& [n x y d s dotr dotc parked waka]] (atom (struct pacman n x y d s dotr dotc parked waka)))
@@ -1440,8 +1398,8 @@
 
   (swap! blinky assoc :dotcount 0)
   (swap! pinky assoc :dotcount 0)
-  (swap! inky assoc :dotcount (if (= (@g :level) 1) 30 0))
-  (swap! clyde assoc :dotcount (cond (= (@g :level) 1) 60
+  (swap! inky assoc :dotcount (if (= (@g :level) 1) 30 0)) ; Inky stays in pen longer on first level
+  (swap! clyde assoc :dotcount (cond (= (@g :level) 1) 60 ; Clyde stays in pen longer on first two levels
 					                           (= (@g :level) 2) 50
 					                           :default 0)))
 
@@ -1460,8 +1418,8 @@
 	  
     (set-actor-position blinky mid, (rowtoy g 14))
 	  (set-actor-position pinky  mid, py)
-	  (set-actor-position inky   (- mid (* (@g :tilesize) 2)), py)
-	  (set-actor-position clyde  (+ mid (* (@g :tilesize) 2)), py)
+	  (set-actor-position inky   (+ 2 (- mid (* (@g :tilesize) 2))), py)
+	  (set-actor-position clyde  (- (+ mid (* (@g :tilesize) 2)) 2), py)
 	  
     (set-actor-direction blinky :left)
 	  (set-actor-direction pinky  :up)
@@ -1471,13 +1429,14 @@
 		(doseq [a [blinky pinky inky clyde]]
 			(swap! a assoc :s (* maxspeed (:ghostspeed level))
                      :lastrow 0
-                     :lastcol 0)			
+                     :lastcol 0
+                     :tx 0 :ty 0)			
 	    (set-ghost-mode g a :scatter))
-                   
-    (swap! blinky assoc :tx (coltox g (- (@g :mazecolumns) 3)) :ty (rowtoy g 0)                      :nd :left)
-    (swap! pinky assoc  :tx (coltox g 2)                       :ty (rowtoy g 0)                      :nd :up)
-    (swap! inky assoc   :tx (coltox g (dec (@g :mazecolumns))) :ty (rowtoy g (- (@g :mazerows) 2))   :nd :right)
-    (swap! clyde assoc  :tx (coltox g 0)                       :ty (rowtoy g (- (@g :mazerows) 2))   :nd :left)
+
+	  (swap! blinky assoc :homec (- (@g :mazecolumns) 3) :homer 0                    :nd :left  :eatpause :eat-blinky)
+    (swap! pinky assoc  :homec 2                       :homer 0                    :nd :up    :eatpause :eat-pinky)
+    (swap! inky assoc   :homec (dec (@g :mazecolumns)) :homer (- (@g :mazerows) 2) :nd :right :eatpause :eat-inky)
+    (swap! clyde assoc  :homec 0                       :homer (- (@g :mazerows) 2) :nd :left  :eatpause :eat-clyde)
 
     (set-game-joystick g :left)
   	(swap! g assoc :fruit :none) ; clear any uneaten fruit from board
@@ -1490,10 +1449,10 @@
   [g pacman blinky pinky inky clyde]
   (println "Getting Pac-Man a fresh life")
   (reset-actors g pacman blinky pinky inky clyde)
-  (reset-dot-counters g blinky pinky inky clyde) ; temporary
+  (reset-dot-counters g blinky pinky inky clyde)
   (when (< (dots-left g) 244)
 	  (swap! g assoc :globaldots -7)) ; only reset global dot counter when life lost during level
-	(swap! g assoc :lives (dec (@g :lives))))
+  (swap! g update-in [:lives] dec))
 
 (defn reset-board
   "Should be called at the start of each new level (except first) to initialize"
@@ -1505,9 +1464,8 @@
 	  (println (str "Setting up a new board with " (count (dots newlevel)) " dots"))
     (swap! g assoc :level newlevel)
     (when (:intermission (nth levels (dec (@g :level))))
-      (swap! g assoc :paused :intermission)
       (play-sound g :intermission)
-      (swap! g assoc :pauseclock (now)))
+      (swap! g assoc :paused :intermission :pauseclock (now)))
     (reset-dot-counters g blinky pinky inky clyde)
 	  
     (let [m (maze (@g :level))]
@@ -1663,32 +1621,29 @@
 
 (defn chomp-ghost
   "Checks to see if Pac-Man ate a ghost"
-  [g pacman ghost eat-ghost]
-	(when (and (not (chomping-ghosts? g)) (not= (@g :paused) eat-ghost) (eat-ghost? g pacman ghost))
-   (swap! g assoc :paused eat-ghost)
-   (swap! g assoc :ghostpoints (* (@g :ghostpoints) 2))
+  [g pacman ghost]
+	(when (and (not (chomping-ghosts? g)) (not= (@g :paused) (@ghost :eatpause)) (eat-ghost? g pacman ghost))
+   (swap! g assoc :paused (@ghost :eatpause))
+   (swap! g update-in [:ghostpoints] * 2)
    (set-game-score g (+ (@g :ghostpoints) (@g :score1)) 1)
 	 (println (str "Pac-Man ate " (name (@ghost :nickname))))
 	 (play-sound g :ghost)
-   (swap! g assoc :blueclock (+ (@g :blueclock) 1000))
+   (swap! g update-in [:blueclock] + 1000)
    (swap! g assoc :pauseclock (now))))
 
 (defn chomp-ghosts
   "Checks to see if Pac-Man ate any ghosts"
   [g pacman blinky pinky inky clyde]
   (when (not= (@g :paused) :death) ;an eaten Pac-Man consumes no ghosts
-	  (chomp-ghost g pacman blinky :eat-blinky)
-	  (chomp-ghost g pacman pinky :eat-pinky)
-	  (chomp-ghost g pacman inky :eat-inky)
-	  (chomp-ghost g pacman clyde :eat-clyde)))
+    (doseq [a [blinky pinky inky clyde]]
+		  (chomp-ghost g pacman a))))
 
 (defn capture-pacman
   "Checks to see if a ghost ate Pac-Man"
   [g pacman blinky pinky inky clyde]
 	(when (and (not= (@g :paused) :death) ;not dead already
 	           (some #(eaten? g pacman %) [blinky pinky inky clyde])) ;one of the ghosts ate him
-	   (swap! g assoc :paused :death)
-	   (swap! g assoc :pauseclock (now))
+	   (swap! g assoc :paused :death :pauseclock (now))
      (println "Pac-Man died")
 		 (play-sound g :death))
 	(when (and (= (@g :paused) :death) (>= (elapsed g :pauseclock) 3))
@@ -1766,7 +1721,7 @@
 															 (let [pacx (- (* (* (/ (@g :w) 5) (- es 5)) 2) (@g :w))
 							                       ghostdist (* (@g :actorsize) 2.2)] 
 	                               (set-actor-position pacman pacx
-																                            (+ (/ (@g :tilesize) 2) (- (/ (@g :h) 2) (/ (@g :actorsize) 2))))
+																                            (+ (@g :halftile) (- (/ (@g :h) 2) (/ (@g :actorsize) 2))))
 																 (set-actor-direction pacman :right)
 																 (swap! pacman assoc :parked nil)
 																 (draw-pacman g gr pacman 3 thick)
@@ -2039,10 +1994,7 @@
 
 					 ;; Draw players and objects on board
            (if (@g :started)
-             (let [x (- (@pacman :x) half)
-                   y (- (@pacman :y) half)
-                   d (@pacman :d)
-                   board-seconds (elapsed g :boardclock)
+             (let [board-seconds (elapsed g :boardclock)
                    game-seconds (elapsed g :clock)
 									 e125 (every g 125)
                    dl (dots-left g)
@@ -2078,31 +2030,37 @@
 		             ;; draw frightened ghosts
                  (when (and (or (not= (@g :paused) :death) (<= (elapsed g :pauseclock) 1))
                             (or (not= (@g :paused) :level) (<= (elapsed g :pauseclock) 1)))
-								 (when (and (= (@clyde :mode) :frightened)  (not= (@g :paused) :eat-clyde))  (draw-ghost g gr clyde thick))
-								 (when (and (= (@inky :mode) :frightened)   (not= (@g :paused) :eat-inky))   (draw-ghost g gr inky thick))
-								 (when (and (= (@pinky :mode) :frightened)  (not= (@g :paused) :eat-pinky))  (draw-ghost g gr pinky thick))
-								 (when (and (= (@blinky :mode) :frightened) (not= (@g :paused) :eat-blinky)) (draw-ghost g gr blinky thick)))
+                  (doseq [a [clyde inky pinky blinky]]
+				            (when (and (= (@a :mode) :frightened) (not= (@g :paused) (@a :eatpause))) (draw-ghost g gr a thick))))
 
-                 ;; draw Pac-Man
                  (let [cg (chomping-ghosts? g)]
+                   ;; draw Pac-Man
                    (when (not cg)
-                       (draw-pacman g gr pacman 1 thick))
+	                   (draw-pacman g gr pacman 1 thick))
 
-		             ;; draw normal ghosts
-                 (when (and (>= board-seconds 2) ; don't show ghosts until level is displayed for 2 seconds
-                            (or (not= (@g :paused) :death) (<= (elapsed g :pauseclock) 1)) ; make ghosts disappear 1 second after Pac-Man dies
-                            (or (not= (@g :paused) :level) (<= (elapsed g :pauseclock) 1))) ; make ghosts disappear 1 second after level complete
-									 (doseq [a [clyde inky pinky blinky]]
-										(when (not= (@a :mode) :frightened) (draw-ghost g gr a thick))))
-
-                 (when cg (.setColor gr Color/CYAN)
-		                      (.setFont gr (Font. "Consolas" Font/BOLD (round (/ size 2))))
-		                      (.drawString gr (str (@g :ghostpoints)) (round x), (+ half (round y))))) ; Show points for ghost eaten
+			             ;; draw normal ghosts
+	                 (when (and (>= board-seconds 2) ; don't show ghosts until level is displayed for 2 seconds
+	                            (or (not= (@g :paused) :death) (<= (elapsed g :pauseclock) 1)) ; make ghosts disappear 1 second after Pac-Man dies
+	                            (or (not= (@g :paused) :level) (<= (elapsed g :pauseclock) 1))) ; make ghosts disappear 1 second after level complete
+										 (doseq [a [clyde inky pinky blinky]]
+											 (when (not= (@a :mode) :frightened) (draw-ghost g gr a thick))))
+	
+									 ;; show points for ghost eaten
+	                 (when cg
+                     (let [a ((@g :paused) {:eat-clyde clyde :eat-inky inky :eat-pinky pinky :eat-blinky blinky})] ; get the ghost just eaten
+											 (.setColor gr Color/CYAN)
+	                     (.setFont gr (Font. "Consolas" Font/BOLD (round (/ size 2))))
+	                     (.drawString gr (str (@g :ghostpoints)) (- (round (@a :x)) half), (round (@a :y))))))
                    
                  ;; draw targets
                  (when (@g :telemetry)
                    (doseq [a [blinky pinky inky clyde]]
 	                   (draw-target g gr a)))
+
+                 ;; blank out tunnel area
+                 (.setColor gr Color/BLACK)
+                 (.fillRect gr (- (coltox g -5) (@g :halftile) 2),0 (* (@g :tilesize) 5),(@g :h))
+                 (.fillRect gr (+ (- (coltox g (@g :mazecolumns)) (@g :halftile)) 3),0 (* (@g :tilesize) 5),(@g :h))
                  
                  ;; draw paused
                  (when (= (@g :paused) :paused)
@@ -2156,15 +2114,15 @@
       (when (or (= (. e getKeyChar) \c)
                 (= (. e getKeyChar) \5))
         (play-sound g :credit)
-        (swap! g assoc :credits (inc (@g :credits)))
+        (swap! g update-in [:credits] inc)
 				(let [#^JFrame me this] 
 		       (.repaint me)))
       (when (and (not (@g :started)) (> (@g :credits) 0) (= (. e getKeyChar) \1))
-        (swap! g assoc :credits (dec (@g :credits)))
+        (swap! g update-in [:credits] dec)
         (reset-game! g pacman blinky pinky inky clyde)
         (start-game! g 1))
       (when (and (not (@g :started)) (> (@g :credits) 1) (= (. e getKeyChar) \2))
-        (swap! g assoc :credits (- (@g :credits) 2))
+        (swap! g update-in [:credits] - 2)
         (reset-game! g pacman blinky pinky inky clyde)
         (start-game! g 2))
       (when (= (. e getKeyCode) KeyEvent/VK_UP)
@@ -2194,11 +2152,11 @@
           (let [#^JFrame me this] 
 		       (.repaint me))))
       (when (= (. e getKeyChar) \a)
-        (swap! g assoc :antialias (not (@g :antialias))))
+        (swap! g update-in [:antialias] not))
       (when (= (. e getKeyChar) \s)
-        (swap! g assoc :sound (not (@g :sound))))
+        (swap! g update-in [:sound] not))
       (when (= (. e getKeyChar) \t)
-        (swap! g assoc :telemetry (not (@g :telemetry))))
+        (swap! g update-in [:telemetry] not))
       (when (= (. e getKeyChar) \p)
 	      (if (= (@g :paused) :none)
 	        (swap! g assoc :paused :paused)
@@ -2246,10 +2204,9 @@
 					        ;; Keep track of dots eaten for pen exit
 								  (swap! g assoc :dotclock (now))
 								  (when (< (@g :globaldots) 0)
-								    (swap! pinky assoc :dotcount (dec (@pinky :dotcount)))
-								    (swap! inky assoc :dotcount (dec (@inky :dotcount)))
-								    (swap! clyde assoc :dotcount (dec (@clyde :dotcount))))
-								  (swap! g assoc :globaldots (inc (@g :globaldots)))
+				            (doseq [a [pinky inky clyde]]
+											(swap! a update-in [:dotcount] dec)))
+				          (swap! g update-in [:globaldots] inc)
 									
 				          (when (= t "●") ; turn ghosts blue and reverse when energizer is eaten
 					          (swap! g assoc :ghostpoints 100)
@@ -2258,14 +2215,11 @@
 	                  (doseq [a [blinky pinky inky clyde]]
 	                    (frighten-ghost! g a)))
 	        
-					        ;; check level complete (redundant to prevent end of level bug)
+					        ;; check level complete
 					        (when (and (not= (@g :paused) :level)
-						                 (= (dots-left g) 0))
-	                  (println "Level complete! (redundant)")
-					          (swap! g assoc :paused :level)
-					          (swap! g assoc :pauseclock (now)))
-					        (when (and (= (@g :paused) :level) (>= (elapsed g :pauseclock) 3)) ; Pause for 3 seconds at end of level
-					          (reset-board g pacman blinky pinky inky clyde))))
+			                       (= (dots-left g) 0))
+						        (println "Level complete!")
+					          (swap! g assoc :paused :level :pauseclock (now)))))
 
 						 ;; eat fruit
 		         (when (and (> (elapsed g :bonusclock) 11) (< (elapsed g :fruitclock) 11) (<= dl 174) (= (@g :fruit) :uneaten) (= r 20) (>= x (- center half)) (<= x (+ center half)))
@@ -2296,10 +2250,10 @@
          (swap! g assoc :paused :none))
        
        ;; check for bonus life
-       (when (and (= (@g :bonuslife) :unearned) (> (@g :score1) 10000))
+       (when (and (= (@g :bonuslife) :unearned) (>= (@g :score1) 10000))
          (swap! g assoc :bonuslife :earned)
          (play-sound g :bonus)
-         (swap! g assoc :lives (inc (@g :lives))))
+         (swap! g update-in [:lives] inc))
        
        ;; check Pac-Man eaten by ghosts
        (when (not= (@g :paused) :level)
@@ -2307,10 +2261,8 @@
 
        ;; reincarnate eaten ghosts
        (when (>= (elapsed g :pauseclock) 1)
-	       (when (= (@g :paused) :eat-blinky)  (swap! g assoc :paused :none) (set-ghost-mode g blinky :reincarnate))
-	       (when (= (@g :paused) :eat-pinky)   (swap! g assoc :paused :none) (set-ghost-mode g pinky :reincarnate))
-	       (when (= (@g :paused) :eat-inky)    (swap! g assoc :paused :none) (set-ghost-mode g inky :reincarnate))
-	       (when (= (@g :paused) :eat-clyde)   (swap! g assoc :paused :none) (set-ghost-mode g clyde :reincarnate)))
+				(doseq [a [blinky pinky inky clyde]]
+					(when (= (@g :paused) (@a :eatpause)) (swap! g assoc :paused :none) (set-ghost-mode g a :reincarnate))))
 
        ;; check ghost reincarnation
        (doseq [a [blinky pinky inky clyde]]
@@ -2319,13 +2271,8 @@
        ;; check game over
        (when (= (@g :lives) 0) (stop-game! g))
 
-       ;; check level complete
-       (when (and (not= (@g :paused) :level)
-                  (= (dots-left g) 0)) 
-         (println "Level complete!")
-         (swap! g assoc :paused :level)
-         (swap! g assoc :pauseclock (now)))
-       (when (and (= (@g :paused) :level) (>= (elapsed g :pauseclock) 3)) ; Pause for 3 seconds
+       ;; reset at end of level
+       (when (and (= (@g :paused) :level) (>= (elapsed g :pauseclock) 3))  ; Pause for 3 seconds at end of level
          (reset-board g pacman blinky pinky inky clyde))
       
 	     (let [#^JFrame me this] (.repaint me)))))
@@ -2368,7 +2315,7 @@
       (.setBackground Color/BLACK) (.setIgnoreRepaint true)
       (.addMouseMotionListener screen) (.addKeyListener screen))
     (. gd setFullScreenWindow screen)
-    (. screen createBufferStrategy 2)
+    (. screen createBufferStrategy 2) ; double buffer
     
     ;; Power up Pac-Man machine!
     (reset-game! thegame thepacman blinky pinky inky clyde)))
