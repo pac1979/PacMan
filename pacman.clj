@@ -5,7 +5,7 @@
 (ns arcade.pacman
   (:require clojure.java.io
             [clojure.set :refer :all])
-  (:import (java.awt Color Toolkit Font GraphicsEnvironment Graphics2D RenderingHints BasicStroke Polygon Cursor)
+  (:import (java.awt Color Toolkit Font GraphicsEnvironment Graphics2D RenderingHints BasicStroke Rectangle Polygon Cursor Robot)
            (java.awt.image BufferStrategy BufferedImage)
            (java.awt.event ActionListener MouseMotionListener KeyListener
                            MouseEvent KeyEvent)
@@ -584,7 +584,7 @@
 
              ;; Jr. Pac-Man
              {:level  6, :style :jrpacman :maze  5, :mazecolor :clydeorange,   :solidcolor :mazeblue,  :dotcolor :peach,       :fruit :trike,      :fruitpoints  100,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
-	         {:level  7, :style :jrpacman :maze  6, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kite,      :fruitpoints  200,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+	           {:level  7, :style :jrpacman :maze  6, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kite,      :fruitpoints  200,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
              {:level  8, :style :jrpacman :maze  7, :mazecolor :clydeorange,    :solidcolor :jrpacblue,  :dotcolor :yellow,       :fruit :drum,      :fruitpoints  500,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
              {:level  9, :style :jrpacman :maze  8, :mazecolor :yellow,        :solidcolor :jrpacgreen,  :dotcolor :white,       :fruit :balloon,      :fruitpoints  700,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
              {:level 10, :style :jrpacman :maze  9, :mazecolor :cyan,        :solidcolor :mazeblue,  :dotcolor :white,       :fruit :train,      :fruitpoints  1000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
@@ -682,16 +682,16 @@
 (defn dots
   "Constructs a list of row,column vectors for the dots on the maze of the given level.
 	The game keeps a copy of the list that is updated as dots are eaten."
-  [l]
-  (for [[rowindex row] (map vector (iterate inc 0) (nth mazes (:maze (nth levels (dec l)))))
+  [level]
+  (for [[rowindex row] (map vector (iterate inc 0) (nth mazes (:maze (nth levels (dec level)))))
         [colindex ch] (map vector (iterate inc 0) row)
         :when (let [c (str ch)] (or (= c "·") (= c "*") (= c "●")))]
     [rowindex colindex]))
 
 (defn maze
   "Returns the maze for a given level"
-  [l]
-  (nth mazes (:maze (nth levels (dec l)))))
+  [level]
+  (nth mazes (:maze (nth levels (dec level)))))
 
 (defn maze-rows [m] (count m))
 (defn maze-columns [m] (count (first m)))
@@ -735,7 +735,7 @@
 			             (and (>= es 57) (< es 64))
 			             (and (>= es 1097) (< es 1098)))) :scatter
 	        (and (= (@g :style) :pacman) (>= (@g :level) 5)
-               (or (< es 8)
+               (or (< es 7.5)
 			             (and (>= es 28) (< es 33))
 			             (and (>= es 53) (< es 58))
 			             (and (>= es 1095) (< es 1096)))) :scatter
@@ -777,14 +777,16 @@
 (defn xtocol
   "Convert screen coordinate x to column index"
   [g x]
-  (let [size (@g :tilesize)
+  (let [x (double x)
+        size (@g :tilesize)
         offset (- (@g :midx) (* size (round (/ (@g :mazecolumns) 2))))]
     (int (/ (- x offset) size))))
 
 (defn ytorow
   "Convert screen coordinate y to row index"
   [g y]
-  (let [size (@g :tilesize)]
+  (let [y (double y)
+        size (@g :tilesize)]
     (int (/ y size))))
 
 (defn opposite-direction
@@ -838,22 +840,24 @@
   (when (> s (@g :highscore))
     (swap! g assoc :highscore s)))
 
+(defn remove-dot!
+  "Removes dot at r,c from list d"
+  [d r c]
+  (replace {[r c] []} d))
+
 (defn eat-dot!
   "Removes dot from board"
   [g a r c t]
 	(set-game-score g (+ (if (not= t "●")
                           10 ; 10 points per dot
                           50) ; 50 points per energizer
-                  (@g :score1)) 1)
+                  (@g :score1)) 1) ; player one
   (swap! a assoc :waka (not (@a :waka)) :dotr r :dotc c) ; toggle "waka-waka" munching sound
   (play-sound g (if (@a :waka) :dot1 :dot2))
-  (let [newdots (replace {[r c] []} (@g :dots))]
-    ;; Replace gameboard dots
-    (println (str "Pac-Man ate " (if (not= t "●") "a dot" "an energizer") " at " r "," c))
-    (swap! g assoc :dots newdots)))
-
-(defn dots-left [g]
-  (count (filter #(not= [] %) (@g :dots))))
+  ;; Replace gameboard dots
+  (println (str "Pac-Man ate " (if (not= t "●") "a dot" "an energizer") " at " r "," c))
+  (swap! g update-in [:dotsleft] dec)
+	(swap! g update-in [:dots] remove-dot! r c))
 
 (defn chomping-ghosts? [g]
 	(some #(= (@g :paused) %) [:eat-blinky :eat-pinky :eat-inky :eat-clyde]))
@@ -862,7 +866,7 @@
   "Returns the Cruise Elroy speed for Blinky, based on board level and dots eaten.
   0 - Not active, 1 - Faster, 2 - Fastest"
   [g]
-  (let [d (dots-left g)
+  (let [d (@g :dotsleft)
         level (nth levels (dec (@g :level)))]
     (cond (< d (:elroy1dots level)) 1
           (< d (:elroy2dots level)) 2
@@ -900,12 +904,12 @@
 (defn center-of-tile-x
   "Returns the center x pixel of the tile at x"
   [g x]
-  (coltox g (xtocol g x)))
+  (double (coltox g (xtocol g x))))
 
 (defn center-of-tile-y
   "Returns the center y pixel of the tile at y"
   [g y]
-  (rowtoy g (ytorow g y)))
+  (double (rowtoy g (ytorow g y))))
 
 (defn center-of-tile?
   "Returns whether given actor is currently at the center of its tile"
@@ -1147,8 +1151,8 @@
 (defn stuck-in-wall?
   "Determines if actor is stuck in wall"
   [g a]
-  (let [stuck (not (path-tile? (mazetile (@g :maze) (ytorow g (@a :y)) (xtocol g (@a :x)))))]
-    (when stuck (println (str (name (@a :nickname)) " is stuck in a wall!")))
+  (when-let [stuck (not (path-tile? (mazetile (@g :maze) (ytorow g (@a :y)) (xtocol g (@a :x)))))]
+    (println (str (name (@a :nickname)) " is stuck in a wall!"))
     stuck))
 
 (defn random-direction
@@ -1164,6 +1168,23 @@
       (if (some #(ghost-my-openpath? g a %) [:left :right :forward])
 				(random-direction g a) ; guess another direction if that way blocked
         (@a :d))))) ; keep going into the void (tunnel case!)
+
+(defn tie?
+  "Checks for a tie between two directions"
+  [a td d d1 d2 d3]
+	(and (= (translate-direction a td) d)
+			 (not= d1 invalid-target)
+			 (or (= d1 d2)
+				   (= d1 d3))))
+
+(defn tiebreak?
+  "Determines whether a tie needs breaking between two directions"
+  [a d d1 d2 d3]
+  (or (tie? a :forward d d1 d2 d3)
+      (tie? a :right d d2 d1 d3)
+      (tie? a :left d d3 d1 d2)))
+
+;(do (println (str "Broke a tie going forward going up for " (name (@a :nickname)) " fd:" fd " rd:" rd " ld:" ld))
 
 (defn turn-ghost
   "Potentially turns ghost based on decision AI.
@@ -1192,30 +1213,16 @@
                               
                               (every? #(= % invalid-target) [fd ld rd]) d ; special case for tunnel
 
-                              (and (= (translate-direction a :right) :left)
-                                   (not= rd invalid-target)
-                                   (or (= rd ld)
-                                       (= rd fd))) (do (println (str "Broke a tie turning right going left for " (name (@a :nickname)) " fd:" fd " rd:" rd " ld:" ld)) :left) ; tie-breaker for left
+                              (and (< ld rd) (< ld fd)) (translate-direction a :left) ; turn left
+															(and (< rd ld) (< rd fd)) (translate-direction a :right) ; turn right
+															(and (< fd ld) (< fd rd)) d ; keep going forward
 
-                              (and (= (translate-direction a :forward) :up)
-                                   (not= fd invalid-target)
-                                   (or (= fd rd)
-                                       (= fd ld))) (do (println (str "Broke a tie going forward going up for " (name (@a :nickname)) " fd:" fd " rd:" rd " ld:" ld)) :up) ; tie-breaker for up
+                              ;; Break ties, favoring up, left, down, right in that order
+                              (tiebreak? a :up fd rd ld) :up
+                              (tiebreak? a :left fd rd ld) :left
+                              (tiebreak? a :down fd rd ld) :down
+                              (tiebreak? a :right fd rd ld) :right
 
-                              (and (= (translate-direction a :left) :up)
-                                   (not= ld invalid-target)
-                                   (or (= ld rd)
-                                       (= ld fd))) (do (println (str "Broke a tie turning left going up for " (name (@a :nickname)) " fd:" fd " rd:" rd " ld:" ld)) :up) ; tie-breaker for up
-
-                              (and (= (translate-direction a :right) :down)
-                                   (<= rd ld)
-                                   (not= rd invalid-target)
-                                   (or (= rd ld)
-                                       (= rd fd))) (do (println (str "Broke a tie turning right going down for " (name (@a :nickname)) " fd:" fd " rd:" rd " ld:" ld)) :down) ; tie-breaker for down
-
-                              (and (<= ld rd) (<= ld fd)) (translate-direction a :left) ; turn left
-															(and (<= rd ld) (<= rd fd)) (translate-direction a :right) ; turn right
-															(and (<= fd ld) (<= fd rd)) d ; keep going forward
 															:default :up)]
 
       (when (not= (@a :nd) new-direction)
@@ -1302,8 +1309,8 @@
 						(let [xo (actor-xoffset a s)
 			            yo (actor-yoffset a s)]
 							(set-actor-position a
-									(+ x (if clear-path xo (min xo (abs (- (coltox g c) x)))))
-									(+ y (if clear-path yo (min yo (abs (- (rowtoy g r) y))))))))
+																	(+ x (if clear-path xo (min xo (abs (- (coltox g c) x)))))
+																	(+ y (if clear-path yo (min yo (abs (- (rowtoy g r) y))))))))
 	         
 	         ;; Wall check
 	         (when (stuck-in-wall? g a)
@@ -1343,9 +1350,9 @@
 (defstruct pacman :nickname :x :y :d :s :dotr :dotc :parked :waka)
 (defn new-pacman [& [n x y d s dotr dotc parked waka]] (atom (struct pacman n x y d s dotr dotc parked waka)))
 
-(defstruct game :maze :dots :mazerows :mazecolumns :midx :midc :joystick :h :w :tilesize :halftile :actorsize :halfactor :credits :highscore :sound :clock :boardclock :modeclock :blueclock :pauseclock :paused :fruitclock :fruit :bonusclock :dotclock :timer :level :style :ghostpoints :players :player :score1 :score2 :lives :bonuslife :globaldots :antialias :telemetry :sirenclock :started)
-(defn new-game [& [maze dots mazerows mazecolumns midx midc joystick h w tilesize halftile actorsize halfactor credits highscore sound clock boardclock modeclock blueclock pauseclock paused fruitclock fruit bonusclock dotclock timer level style ghostpoints players player score1 score2 lives bonuslife globaldots antialias telemetry sirenclock started]]
-  (atom (struct game maze dots mazerows mazecolumns midx midc joystick h w tilesize halftile actorsize halfactor credits highscore sound clock boardclock modeclock blueclock pauseclock paused fruitclock fruit bonusclock dotclock timer level style ghostpoints players player score1 score2 lives bonuslife globaldots antialias telemetry sirenclock started)))
+(defstruct game :maze :dots :mazerows :mazecolumns :midx :midc :joystick :h :w :tilesize :halftile :actorsize :halfactor :credits :highscore :sound :clock :boardclock :modeclock :blueclock :pauseclock :paused :fruitclock :fruit :bonusclock :dotclock :timer :level :style :ghostpoints :players :player :score1 :score2 :lives :bonuslife :globaldots :dotsleft :antialias :telemetry :sirenclock :started)
+(defn new-game [& [maze dots mazerows mazecolumns midx midc joystick h w tilesize halftile actorsize halfactor credits highscore sound clock boardclock modeclock blueclock pauseclock paused fruitclock fruit bonusclock dotclock timer level style ghostpoints players player score1 score2 lives bonuslife globaldots dotsleft antialias telemetry sirenclock started]]
+  (atom (struct game maze dots mazerows mazecolumns midx midc joystick h w tilesize halftile actorsize halfactor credits highscore sound clock boardclock modeclock blueclock pauseclock paused fruitclock fruit bonusclock dotclock timer level style ghostpoints players player score1 score2 lives bonuslife globaldots dotsleft antialias telemetry sirenclock started)))
 
 (defn set-game-joystick [g j]
   (println (str "Player moved joystick " (name j)))
@@ -1356,14 +1363,14 @@
 	[g]
 	(let [ct (now)]
 		(swap! g assoc :clock ct
-						 :boardclock ct
-						 :modeclock ct
-						 :blueclock (- ct 100000)
-						 :pauseclock ct
-						 :sirenclock (- ct 100000)
-						 :bonusclock ct
-						 :dotclock ct
-						 :fruitclock ct)))
+									 :boardclock ct
+									 :modeclock ct
+									 :blueclock (- ct 100000)
+									 :pauseclock ct
+									 :sirenclock (- ct 100000)
+									 :bonusclock ct
+									 :dotclock ct
+									 :fruitclock ct)))
 
 (defn stop-game!
   "Stops the game (i.e. GAME OVER)"
@@ -1406,38 +1413,34 @@
         mid (@g :midx)
         py (rowtoy g 17)
         level (nth levels (dec (@g :level)))]
-    (println "Setting up the actors")
-    (set-actor-position pacman (@g :midx), (rowtoy g 26))
-	  (swap! pacman assoc :s (* maxspeed (:pacspeed level)))
-	  (set-actor-direction pacman :left)
-	  
-    (set-actor-position blinky mid, (rowtoy g 14))
-	  (set-actor-position pinky  mid, py)
-	  (set-actor-position inky   (+ 2 (- mid (* (@g :tilesize) 2))), py)
-	  (set-actor-position clyde  (- (+ mid (* (@g :tilesize) 2)) 2), py)
-	  
-    (set-actor-direction blinky :left)
-	  (set-actor-direction pinky  :up)
-	  (set-actor-direction inky   :right)
-	  (set-actor-direction clyde  :left)
-
-		(doseq [a [blinky pinky inky clyde]]
+    (println (str "Setting up the actors for level " (@g :level)))
+    
+    ; Pac-Man settings
+	  (swap! pacman assoc :x (@g :midx)
+							          :y (rowtoy g 26)
+				                :d :left
+	                      :s (* maxspeed (:pacspeed level)))
+  
+    ; common ghost settings
+    (doseq [a [blinky pinky inky clyde]]
 			(swap! a assoc :s (* maxspeed (:ghostspeed level))
                      :lastrow 0
                      :lastcol 0
-                     :tx 0 :ty 0)			
-	    (set-ghost-mode g a :scatter))
+                     :mode :scatter
+                     :tx 0 :ty 0))
 
-	  (swap! blinky assoc :homec (- (@g :mazecolumns) 3) :homer 0                    :nd :left  :eatpause :eat-blinky)
-    (swap! pinky assoc  :homec 2                       :homer 0                    :nd :up    :eatpause :eat-pinky)
-    (swap! inky assoc   :homec (dec (@g :mazecolumns)) :homer (- (@g :mazerows) 2) :nd :right :eatpause :eat-inky)
-    (swap! clyde assoc  :homec 0                       :homer (- (@g :mazerows) 2) :nd :left  :eatpause :eat-clyde)
+    ; unique ghost settings
+	  (swap! blinky assoc :x mid                                :y (rowtoy g 14) :homec (- (@g :mazecolumns) 3) :homer 0                    :d :left  :nd :left  :eatpause :eat-blinky)
+    (swap! pinky assoc  :x mid                                :y py            :homec 2                       :homer 0                    :d :up    :nd :up    :eatpause :eat-pinky)
+    (swap! inky assoc   :x (+ 2 (- mid (* (@g :tilesize) 2))) :y py            :homec (dec (@g :mazecolumns)) :homer (- (@g :mazerows) 2) :d :right :nd :right :eatpause :eat-inky)
+    (swap! clyde assoc  :x (- (+ mid (* (@g :tilesize) 2)) 2) :y py            :homec 0                       :homer (- (@g :mazerows) 2) :d :left  :nd :left  :eatpause :eat-clyde)
 
-    (set-game-joystick g :left)
-  	(swap! g assoc :fruit :none) ; clear any uneaten fruit from board
     (when (not= (@g :paused) :intermission)
 	    (swap! g assoc :paused :start :pauseclock (now)))
-    (swap! g assoc :modeclock (now) :boardclock (now))))
+    (swap! g assoc :fruit :none ; clear any uneaten fruit from board
+				           :joystick :left
+				           :modeclock (now)
+		               :boardclock (now))))
 
 (defn reset-life
   "Called each time Pac-Man starts a new life (including first)"
@@ -1445,7 +1448,7 @@
   (println "Getting Pac-Man a fresh life")
   (reset-actors g pacman blinky pinky inky clyde)
   (reset-dot-counters g blinky pinky inky clyde)
-  (when (< (dots-left g) 244)
+  (when (< (@g :dotsleft) 244)
 	  (swap! g assoc :globaldots -7)) ; only reset global dot counter when life lost during level
   (swap! g update-in [:lives] dec))
 
@@ -1464,19 +1467,18 @@
     (reset-dot-counters g blinky pinky inky clyde)
 	  
     (let [m (maze (@g :level))]
-		  (swap! g assoc :maze m :style (:style (nth levels (dec (@g :level)))) :mazecolumns (maze-columns m) :mazerows (maze-rows m) :midc (round (/ (maze-columns m) 2)) :dots (dots (@g :level))))
+		  (swap! g assoc :maze m :style (:style (nth levels (dec (@g :level)))) :mazecolumns (maze-columns m) :mazerows (maze-rows m) :midc (round (/ (maze-columns m) 2)) :dots (dots (@g :level)) :dotsleft (count (dots (@g :level)))))
     (reset-actors g pacman blinky pinky inky clyde)))
 
 (defn reset-game!
   "Called once at the start of a game"
   [g pacman blinky pinky inky clyde]
   (println "Starting a new game")
-	(swap! g assoc :level 1 :lives 4)
+	(let [m (maze 1)]
+    (swap! g assoc  :level 1 :lives 4 :bonuslife :unearned :score1 0 :score2 0 :antialias true :telemetry false
+										:maze m :style (:style (first levels)) :mazecolumns (maze-columns m) :mazerows (maze-rows m) :midc (round (/ (maze-columns m) 2)) :dots (dots 1) :dotsleft (count (dots 1))))
 	(reset-life g pacman blinky pinky inky clyde)
-  (reset-dot-counters g blinky pinky inky clyde)
-  (let [m (maze 1)]
-    (swap! g assoc  :bonuslife :unearned :score1 0 :score2 0 :antialias true :telemetry false
-										:maze m :style (:style (first levels)) :mazecolumns (maze-columns m) :mazerows (maze-rows m) :midc (round (/ (maze-columns m) 2)) :dots (dots 1))))
+  (reset-dot-counters g blinky pinky inky clyde))
 
 (defn draw-pacman [g gr pacman mult thick]
   (let [size (* (@g :actorsize) mult)
@@ -1518,10 +1520,10 @@
 (defn draw-ghost
   "Draws ghost. Eye locations should be at 1/3 and 2/3 across"
   [g gr ghost thick]
-  (let [size (@g :actorsize)
-  	    half (@g :halfactor)
-  	    x (- (@ghost :x) half)
-        y (- (@ghost :y) half)
+  (let [size (double (@g :actorsize))
+  	    half (double (@g :halfactor))
+  	    x (double (- (@ghost :x) half))
+        y (double (- (@ghost :y) half))
         level (nth levels (dec (@g :level)))
         flashtime (if (< (:frighttime level) 3) (:frighttime level) (round (/ (:frighttime level) 3)))
         color (cond (and (> (elapsed g :blueclock) (- (:frighttime level) flashtime)) (= (@ghost :mode) :frightened)) (if (every g 250) (:white game-colors) (:ghostblue game-colors))
@@ -1535,8 +1537,8 @@
         halfeye (round (/ eye 2))
         ball (max (/ (@g :tilesize) 4.0) (/ size 7.0))
         halfball (/ ball 2)
-        ballx (xoffset (@ghost :nd) halfball)
-        bally (yoffset (@ghost :nd) halfball)
+        ballx (double (xoffset (@ghost :nd) halfball))
+        bally (double (yoffset (@ghost :nd) halfball))
         gown (round (/ size 7)) ; gown "length"
         gy (dec (- (+ y size) gown)) ; gown top coordinate
         gw (/ size 5) ; width of gown segment (top)
@@ -1977,19 +1979,18 @@
            (.drawString gr "HIGH" (- (coltox g (- mid 5)) halftile) (+ (rowtoy g 0) half))
            (.drawString gr "SCORE" (- (coltox g mid) halftile) (+ (rowtoy g 0) half))
            (when (> (@g :highscore) 0)
-	           (.drawString gr highscore (- (coltox g (- (+ mid 3) (count highscore))) halftile) (+ (rowtoy g 1) half))
-             #_(.drawString gr (format "% 7d" (@g :highscore)) (- (coltox g (- mid 4)) halftile) (+ (rowtoy g 1) half)))
+	           (.drawString gr highscore (- (coltox g (- (+ mid 3) (count highscore))) halftile) (+ (rowtoy g 1) half)))
           
            ;; level
            (draw-levels g gr)
 
-			 ;; Draw players and objects on board
+					 ;; Draw players and objects on board
            (if (@g :started)
              (let [board-seconds (elapsed g :boardclock)
                    game-seconds (elapsed g :clock)
                    just-happened (<= (elapsed g :pauseclock) 1)
 									 e125 (every g 125)
-                   dl (dots-left g)
+                   dl (@g :dotsleft)
                    level (nth levels (dec l))]
 
 								 ;; draw "Ready!"
@@ -2083,19 +2084,19 @@
                    (when (= (@g :paused) :none) 
                      (play-sound g :siren))))
              ;;else draw Game Over mode
-             (do
+             (doto gr
 		           ;; marquis art 
-		           (.drawImage gr (:monster-art images) 10,10 200,200 nil)
-		           (.drawImage gr (:pac-art images) (- (@g :w) 210),10 200,200 nil)
+		           (.drawImage (:monster-art images) 10,10 200,200 nil)
+		           (.drawImage (:pac-art images) (- (@g :w) 210),10 200,200 nil)
              
-	             (.setColor gr Color/RED)
-							 (.drawString gr "GAME" (- (coltox g (- (@g :midc) 5)) halftile) (+ (rowtoy g 20) halftile))
-							 (.drawString gr "OVER" (- (coltox g (+ (@g :midc) 1)) halftile) (+ (rowtoy g 20) halftile))
-
-	             (doto gr
-	               (.setColor (:white game-colors))
-								 (.drawString "CREDIT" (- (coltox g (- (@g :midc) 12)) halftile) (+ (rowtoy g (dec (@g :mazerows))) (/ half 2)))
-								 (.drawString (format "% 2d" (@g :credits)) (- (coltox g (- (@g :midc) 5)) halftile) (+ (rowtoy g (dec (@g :mazerows))) (/ half 2)))))))))
+	             (.setColor Color/RED)
+							 (.drawString "GAME" (- (coltox g (- (@g :midc) 5)) halftile) (+ (rowtoy g 20) halftile))
+							 (.drawString "OVER" (- (coltox g (+ (@g :midc) 1)) halftile) (+ (rowtoy g 20) halftile))
+       
+			         ;; credits
+               (.setColor (:white game-colors))
+							 (.drawString "CREDIT" (- (coltox g (- (@g :midc) 12)) halftile) (+ (rowtoy g (dec (@g :mazerows))) halftile))
+							 (.drawString (format "% 2d" (@g :credits)) (- (coltox g (- (@g :midc) 5)) halftile) (+ (rowtoy g (dec (@g :mazerows))) halftile)))))))
 
          (. gr dispose) 
          (. bs show))))
@@ -2146,6 +2147,12 @@
           (reset-game! g pacman blinky pinky inky clyde) ; reset Pac-Man machine
           (let [#^JFrame me this] 
 		       (.repaint me))))
+      (when (= (. e getKeyCode) KeyEvent/VK_F3)
+				(let [robot (new Robot)
+			        bufferedImage (.createScreenCapture robot (new Rectangle 0,0 (@g :w),(@g :h)))
+							#^JFrame me this] 
+		      (.repaint me)
+					(javax.imageio.ImageIO/write bufferedImage "png" (clojure.java.io/file (str (get-current-directory) "screencapture.png")))))
       (when (= (. e getKeyChar) \a)
         (swap! g update-in [:antialias] not))
       (when (= (. e getKeyChar) \s)
@@ -2168,7 +2175,7 @@
     (keyTyped [e])
 
     (actionPerformed [e]
-       (let [dl (dots-left g)
+       (let [dl (@g :dotsleft)
              level (nth levels (dec (@g :level)))]
 	       (when (= (@g :paused) :none) ; nobody moves during paused mode
 
@@ -2204,15 +2211,13 @@
 				          (swap! g update-in [:globaldots] inc)
 									
 				          (when (= t "●") ; turn ghosts blue and reverse when energizer is eaten
-					          (swap! g assoc :ghostpoints 100)
-	                  (swap! g assoc :blueclock (now))
-                    (swap! g assoc :sirenclock (- (now) 2000))
+					          (swap! g assoc :ghostpoints 100 :blueclock (now) :sirenclock (- (now) 2000))
 	                  (doseq [a [blinky pinky inky clyde]]
 	                    (frighten-ghost! g a)))
 	        
 					        ;; check level complete
 					        (when (and (not= (@g :paused) :level)
-			                       (= (dots-left g) 0))
+			                       (= (@g :dotsleft) 0))
 						        (println "Level complete!")
 					          (swap! g assoc :paused :level :pauseclock (now)))))
 
