@@ -7,8 +7,7 @@
             [clojure.set :refer :all])
   (:import (java.awt Color Toolkit Font GraphicsEnvironment Graphics2D RenderingHints BasicStroke Rectangle Polygon Cursor Robot)
            (java.awt.image BufferStrategy BufferedImage)
-           (java.awt.event ActionListener MouseMotionListener KeyListener
-                           MouseEvent KeyEvent)
+           (java.awt.event ActionListener MouseMotionListener KeyListener MouseEvent KeyEvent)
            (javax.imageio ImageIO)
            (javax.swing JFrame Timer)
            (java.applet Applet)
@@ -567,10 +566,10 @@
 
 (def levels [;; Pac-Man
              {:level  1, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :cherry,     :fruitpoints  100, :pacspeed 0.80, :pacdotspeed 0.71, :ghostspeed 0.75, :ghosttunnelspeed 0.40, :elroy1dots  20 :elroy1speed 0.80 :elroy2dots 10 :elroy2speed 0.85 :frightpacspeed 0.90 :frightpacdotspeed 0.79 :frightghostspeed 0.50 :frighttime 6 :intermission nil}
-             {:level  2, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :strawberry, :fruitpoints  300, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  30 :elroy1speed 0.90 :elroy2dots 15 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 5 :intermission nil}
-             {:level  3, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :orange,     :fruitpoints  500, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  40 :elroy1speed 0.90 :elroy2dots 20 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 4 :intermission 1}
-             {:level  4, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :orange,     :fruitpoints  500, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  40 :elroy1speed 0.90 :elroy2dots 20 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 3 :intermission nil}
-             {:level  5, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :apple,      :fruitpoints  700, :pacspeed 1.00, :pacdotspeed 0.87, :ghostspeed 0.95, :ghosttunnelspeed 0.50, :elroy1dots  40 :elroy1speed 1.00 :elroy2dots 20 :elroy2speed 1.05 :frightpacspeed 1.00 :frightpacdotspeed 0.87 :frightghostspeed 0.60 :frighttime 2 :intermission nil}
+             ;{:level  2, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :strawberry, :fruitpoints  300, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  30 :elroy1speed 0.90 :elroy2dots 15 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 5 :intermission nil}
+             ;{:level  3, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :orange,     :fruitpoints  500, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  40 :elroy1speed 0.90 :elroy2dots 20 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 4 :intermission 1}
+             ;{:level  4, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :orange,     :fruitpoints  500, :pacspeed 0.90, :pacdotspeed 0.79, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  40 :elroy1speed 0.90 :elroy2dots 20 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 3 :intermission nil}
+             ;{:level  5, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :apple,      :fruitpoints  700, :pacspeed 1.00, :pacdotspeed 0.87, :ghostspeed 0.95, :ghosttunnelspeed 0.50, :elroy1dots  40 :elroy1speed 1.00 :elroy2dots 20 :elroy2speed 1.05 :frightpacspeed 1.00 :frightpacdotspeed 0.87 :frightghostspeed 0.60 :frighttime 2 :intermission nil}
 
              ;; Ms. Pac-Man
              ;;{:level  2,  :style :pacman :maze  1, :mazecolor :red,           :solidcolor :peach,    :dotcolor :graydots,       :fruit :cherry,      :fruitpoints  100, :pacspeed 0.90, :pacdotspeed 0.83, :ghostspeed 0.85, :ghosttunnelspeed 0.45, :elroy1dots  30 :elroy1speed 0.90 :elroy2dots 15 :elroy2speed 0.95 :frightpacspeed 0.95 :frightpacdotspeed 0.83 :frightghostspeed 0.55 :frighttime 5 :intermission nil}
@@ -583,16 +582,16 @@
              {:level  5,  :style :mspacman :maze  4, :mazecolor :yellorange,   :solidcolor :mazeblue,  :dotcolor :graydots,       :fruit :banana,      :fruitpoints  5000, :pacspeed 1.00, :pacdotspeed 0.91, :ghostspeed 0.95, :ghosttunnelspeed 0.50, :elroy1dots  40 :elroy1speed 1.00 :elroy2dots 20 :elroy2speed 1.05 :frightpacspeed 1.00 :frightpacdotspeed 0.96 :frightghostspeed 0.60 :frighttime 2 :intermission 3}
 
              ;; Jr. Pac-Man
-             {:level  6, :style :jrpacman :maze  5, :mazecolor :clydeorange,   :solidcolor :mazeblue,  :dotcolor :peach,       :fruit :trike,      :fruitpoints  100,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
-	           {:level  7, :style :jrpacman :maze  6, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kite,      :fruitpoints  200,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
-             {:level  8, :style :jrpacman :maze  7, :mazecolor :clydeorange,    :solidcolor :jrpacblue,  :dotcolor :yellow,       :fruit :drum,      :fruitpoints  500,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
-             {:level  9, :style :jrpacman :maze  8, :mazecolor :yellow,        :solidcolor :jrpacgreen,  :dotcolor :white,       :fruit :balloon,      :fruitpoints  700,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
-             {:level 10, :style :jrpacman :maze  9, :mazecolor :cyan,        :solidcolor :mazeblue,  :dotcolor :white,       :fruit :train,      :fruitpoints  1000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
-             {:level 11, :style :jrpacman :maze 10, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kitty,      :fruitpoints  2000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
-             {:level 12, :style :jrpacman :maze 11, :mazecolor :clydeorange,    :solidcolor :mazeblue,  :dotcolor :peach,       :fruit :beer,      :fruitpoints  5000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+             ;{:level  6, :style :jrpacman :maze  5, :mazecolor :clydeorange,   :solidcolor :mazeblue,  :dotcolor :peach,       :fruit :trike,      :fruitpoints  100,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+	           ;{:level  7, :style :jrpacman :maze  6, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kite,      :fruitpoints  200,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+             ;{:level  8, :style :jrpacman :maze  7, :mazecolor :clydeorange,    :solidcolor :jrpacblue,  :dotcolor :yellow,       :fruit :drum,      :fruitpoints  500,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+             ;{:level  9, :style :jrpacman :maze  8, :mazecolor :yellow,        :solidcolor :jrpacgreen,  :dotcolor :white,       :fruit :balloon,      :fruitpoints  700,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+             ;{:level 10, :style :jrpacman :maze  9, :mazecolor :cyan,        :solidcolor :mazeblue,  :dotcolor :white,       :fruit :train,      :fruitpoints  1000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+             ;{:level 11, :style :jrpacman :maze 10, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kitty,      :fruitpoints  2000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+             ;{:level 12, :style :jrpacman :maze 11, :mazecolor :clydeorange,    :solidcolor :mazeblue,  :dotcolor :peach,       :fruit :beer,      :fruitpoints  5000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
 
              ;; Custom
-             {:level 13, :style :jrpacman :maze 12, :mazecolor :purple,    :solidcolor :darkgray,  :dotcolor :glow,       :fruit :coffee,      :fruitpoints  5000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
+             ;{:level 13, :style :jrpacman :maze 12, :mazecolor :purple,    :solidcolor :darkgray,  :dotcolor :glow,       :fruit :coffee,      :fruitpoints  5000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil}
 
              ;; More classic
              {:level  6, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :apple,      :fruitpoints  700, :pacspeed 1.00, :pacdotspeed 0.87, :ghostspeed 0.95, :ghosttunnelspeed 0.50, :elroy1dots  50 :elroy1speed 1.00 :elroy2dots 25 :elroy2speed 1.05 :frightpacspeed 1.00 :frightpacdotspeed 0.87 :frightghostspeed 0.60 :frighttime 5 :intermission 2}
@@ -722,7 +721,7 @@
                (or (< es wander)
 			             (and (>= es 30) (< es 30.5))
 			             (and (>= es 57) (< es 57.5))
-			             (and (>= es 84) (< es 84.5)))) :scatter
+			             (and (>= es 84) (< es 84.5)))) :scatter ; Ms. and Jr. Pac-Man ghosts switch direction but don't really scatter
           (and (= (@g :style) :pacman) (= (@g :level) 1)
                (or (< es 10)
 			             (and (>= es 30) (< es 37))
@@ -808,29 +807,43 @@
   [t]
   (some #(= t %) ["·" " " "X" "#" "●" "^" "*" "<" "-"]))
 
-(defn mazetile
+(defn maze-tile
   "Returns the contents of the maze tile at row, col"
   [m r c]
   (if (and (>= r 0) (>= c 0) (< r (count m)) (< c (count (first m)))) ; bounds check
     (str (nth (nth m r) c))
     "<")) ; tunnel if off-grid
 
+(defn in-gate?
+  "Returns whether actor is passing through pen gate"
+  [g a]
+  (let [r (ytorow g (@a :y))
+        c (xtocol g (@a :x))
+        t (maze-tile (@g :maze) r c)]
+	  (= t "-")))
+
 (defn in-pen?
   "Returns whether actor is in pen"
   [g a]
   (let [r (ytorow g (@a :y))
         c (xtocol g (@a :x))
-        t (mazetile (@g :maze) r c)]
+        t (maze-tile (@g :maze) r c)]
 	  (or (= t "X") (= t "x"))))
 
 (defn entering-pen? [g d r c]
-  (let [mid (@g :midc)]
-	  (and (= d :down) (= r 14) (or (= c mid) (= c (dec mid))))))
+  "Determines whether actor is attempting to enter pen"
+  (let [t (maze-tile (@g :maze) (inc r) c)]
+	  (and (= d :down) (= t "-"))))
+
+(defn leaving-pen?
+  "Determines whether ghost is leaving pen"
+  [g a gs]
+  (and (not= (@a :mode) :reincarnate) (in-pen? g a) (> (@a :x) (- (@g :midx) gs)) (< (@a :x) (+ (@g :midx) gs))))
 
 (defn forbidden?
   "Returns whether ghost is forbidden to turn this way"
   [m d r c]
-  (let [t (mazetile m r c)]
+  (let [t (maze-tile m r c)]
     (and (= d :up) (or (= t "^") (= t "*")))))
 
 (defn set-game-score [g s p]
@@ -887,19 +900,14 @@
 					                   (= ad :left) :up
 					                   (= ad :right) :down))))
 
-(defn nexttile
+(defn next-tile
   "Returns the contents of the next adjacent tile in the actor's given direction"
   [g a d]
   (let [c (xtocol g (@a :x))
         r (ytorow g (@a :y))
         nc (+ c (xoffset d 1))
         nr (+ r (yoffset d 1))]
-	  (mazetile (@g :maze) nr nc)))
-
-(defn my-nexttile
-  "Returns the contents of the next adjacent tile in the actor's given relative direction"
-  [g a d]
-  (nexttile g a (translate-direction a d)))
+	  (maze-tile (@g :maze) nr nc)))
 
 (defn center-of-tile-x
   "Returns the center x pixel of the tile at x"
@@ -955,13 +963,13 @@
         nc (+ c (xoffset (@a :d) 1))
         nrt (+ nr (yoffset td 1)) ; Coordinates of tile in given direction
         nct (+ nc (xoffset td 1))
-        n (mazetile (@g :maze) nrt nct)] ; The contents of the tile
+        n (maze-tile (@g :maze) nrt nct)] ; The contents of the tile
     (ghost-valid-tile? g a td nr nc n)))
 
 (defn ghost-openpath?
   "Returns whether path open for actor's given direction"
   [g a d]
-  (let [n (nexttile g a d)
+  (let [n (next-tile g a d)
         r (ytorow g (@a :y))
         c (xtocol g (@a :x))]
     (ghost-valid-tile? g a d r c n)))
@@ -969,7 +977,7 @@
 (defn pacman-openpath?
   "Returns whether path open for actor's given direction"
   [g a d]
-  (let [n (nexttile g a d)
+  (let [n (next-tile g a d)
         r (ytorow g (@a :y))
         c (xtocol g (@a :x))]
     (and (or (or (= d :left) (= d :right)) (and (> c 0) (< c (@g :mazecolumns)))) ; cannot turn up and down when deep in tunnel
@@ -1040,8 +1048,8 @@
         od (@a :d)
         nd (opposite-direction (@a :d))
         mid (@g :midc)]
-	(when (or (not (and (or (= r 14) (= r 15)) (or (= c mid) (= c (dec mid))))) ; don't reverse if just leaving pen
-            (or (= r 0) (= r (dec (@g :mazecolumns))))) ; don't reverse if about to warp through tunnel
+	(when (and (not (in-pen? g a)) ; don't reverse in pen
+             (not (in-gate? g a))) ; don't reverse if just leaving pen
 		(set-ghost-direction? g a nd)
     ;; Calculate a reverse turn, in case opposite direction is blocked (i.e. corner)
 		(cond (ghost-openpath? g a nd) (swap! a assoc :nd nd :lastrow 0 :lastcol 0) ; force recalc at next tile center
@@ -1095,29 +1103,28 @@
         
         ;; Calculate target tile. Default is Pac-Man himself. All other cases are special.
         ttc (cond (= m :reincarnate) (dec mid) ; Return to pen
-                 
-                 ;; Home corners
-				         (and (= n :shadow) (= m :scatter) (= (elroy-level g) 0)) (@a :homec) ; Go to home corner every so often (except Cruise Elroy)
-                 (and (not= n :shadow) (= m :scatter)) (@a :homec)
-                 
-                 ;; Individual "personalities"
-		             (and (= n :speedy) (= pd :up)) (- pc 4) ; Reproduces Pinky's erratic bug, targeting four tiles to the left if Pac-Man faces up
-		             (= n :speedy) (+ pc (xoffset pd 4)) ; Pinky targets tile 4 squares ahead of Pac-Man
-                 (and (= n :bashful) (= pd :up)) (- pc (- (xtocol g (@b :x)) (- pc 2))) ; Reproduces Inky's erratic bug, targeting two tiles to the left if Pac-Man faces up
-                 (= n :bashful) (- pc (- (xtocol g (@b :x)) (+ pc (xoffset pd 2)))) ; Inky targets blinky's mirrored tile relative to 2 squares ahead of Pac-Man
-                 (= n :pokey) (let [tiledist (tile-distance g a d pr pc)]
+                  ;; Home corners
+                  (and (= n :shadow) (= m :scatter) (or (= (elroy-level g) 0) (< (elapsed g :boardclock) 10))) (@a :homec) ; Go to home corner every so often (except Cruise Elroy)
+                  (and (not= n :shadow) (= m :scatter)) (@a :homec)
+
+                  ;; Individual "personalities"
+                  (and (= n :speedy) (= pd :up)) (- pc 4) ; Reproduces Pinky's erratic bug, targeting four tiles to the left if Pac-Man faces up
+                  (= n :speedy) (+ pc (xoffset pd 4)) ; Pinky targets tile 4 squares ahead of Pac-Man
+                  (and (= n :bashful) (= pd :up)) (- pc (- (xtocol g (@b :x)) (- pc 2))) ; Reproduces Inky's erratic bug, targeting two tiles to the left if Pac-Man faces up
+                  (= n :bashful) (- pc (- (xtocol g (@b :x)) (+ pc (xoffset pd 2)))) ; Inky targets blinky's mirrored tile relative to 2 squares ahead of Pac-Man
+                  (= n :pokey) (let [tiledist (tile-distance g a d pr pc)]
                                  (if (< tiledist 8) 0 pc)) ; Clyde seeks his corner within radius of 8 tiles of Pac-Man
-                 :default pc) ; Shadow targets Pac-Man directly
+                  :default pc) ; Shadow targets Pac-Man directly
         ttr (cond (= m :reincarnate) 17
-                 
-                 (and (= n :shadow) (= m :scatter) (= (elroy-level g) 0)) (@a :homer)
-                 (and (not= n :shadow) (= m :scatter)) (@a :homer)
-                 
-                 (= n :speedy) (+ pr (yoffset pd 4))
-                 (= n :bashful) (- pr (- (ytorow g (@b :y)) (+ pr (yoffset pd 2))))
-                 (= n :pokey) (let [tiledist (tile-distance g a d pr pc)]
+
+                  (and (= n :shadow) (= m :scatter) (or (= (elroy-level g) 0) (< (elapsed g :boardclock) 10))) (@a :homer)
+                  (and (not= n :shadow) (= m :scatter)) (@a :homer)
+
+                  (= n :speedy) (+ pr (yoffset pd 4))
+                  (= n :bashful) (- pr (- (ytorow g (@b :y)) (+ pr (yoffset pd 2))))
+                  (= n :pokey) (let [tiledist (tile-distance g a d pr pc)]
                                  (if (< tiledist 8) 34 pr))
-                 :default pr)
+                  :default pr)
         tc (cond (< ttc 0) 0
                  (> ttc (dec (@g :mazecolumns))) (dec (@g :mazecolumns))
                  :default ttc)
@@ -1140,7 +1147,7 @@
         c (xtocol g x)
         d (@a :d)
         tunnel-depth 3] ; tunnel invisibly extends 3 tiles off-grid
-	  (when (= (mazetile (@g :maze) r c) "<")
+	  (when (= (maze-tile (@g :maze) r c) "<")
 	   (if (and (= d :left) (= c (- tunnel-depth)))
 	     (do (set-actor-position a (coltox g (dec (+ tunnel-depth (dec (@g :mazecolumns))))), y)
 		       (println (str (name (@a :nickname)) " went through the left tunnel")))
@@ -1151,7 +1158,7 @@
 (defn stuck-in-wall?
   "Determines if actor is stuck in wall"
   [g a]
-  (when-let [stuck (not (path-tile? (mazetile (@g :maze) (ytorow g (@a :y)) (xtocol g (@a :x)))))]
+  (when-let [stuck (not (path-tile? (maze-tile (@g :maze) (ytorow g (@a :y)) (xtocol g (@a :x)))))]
     (println (str (name (@a :nickname)) " is stuck in a wall!"))
     stuck))
 
@@ -1183,8 +1190,6 @@
   (or (tie? a :forward d d1 d2 d3)
       (tie? a :right d d2 d1 d3)
       (tie? a :left d d3 d1 d2)))
-
-;(do (println (str "Broke a tie going forward going up for " (name (@a :nickname)) " fd:" fd " rd:" rd " ld:" ld))
 
 (defn turn-ghost
   "Potentially turns ghost based on decision AI.
@@ -1236,7 +1241,7 @@
   (let [c (xtocol g (@a :x))
         r (ytorow g (@a :y))
         level (nth levels (dec (@g :level)))
-        t (mazetile (@g :maze) r c)
+        t (maze-tile (@g :maze) r c)
         mid (@g :midc)
         gs (cond (= (@a :mode) :reincarnate) (* maxspeed 1.05) ; speed up in reincarnate mode
 								 (= (@a :mode) :frightened) (* maxspeed (:frightghostspeed level)) ; 50% slow down in frightened mode
@@ -1254,32 +1259,37 @@
     (turn-ghost g a p b))
 
   ;; Move ghost
-  (when (or pen-timeout
+  (if (or pen-timeout
             (>= (@g :globaldots) (@a :dotlimit))
             (and (< (@g :globaldots) 0) (<= (@a :dotcount) 0))) ; Don't leave pen until Pac-Man has eaten enough dots
-    (when pen-timeout
-      (println "Releasing the next ghost!")
-      (swap! g update-in [:globaldots] + 10) ; force the ghosts out of the pen over time if not enough dots eaten
-      (swap! g assoc :dotclock (now)))
-    (set-actor-position a
-											  (+ (@a :x) (actor-xoffset a gs))
-											  (+ (@a :y) (actor-yoffset a gs)))
+    (do
+	    (when pen-timeout
+	      (println "Releasing the next ghost!")
+	      (swap! g update-in [:globaldots] + 10) ; force the ghosts out of the pen over time if not enough dots eaten
+	      (swap! g assoc :dotclock (now)))
+      #_(when (in-pen? g a)
+        (swap! a assoc :y (rowtoy g 17) :d (if (< c mid) :right :left))) ; move towards exit of pen
+	    (set-actor-position a
+												  (+ (@a :x) (actor-xoffset a gs))
+												  (+ (@a :y) (actor-yoffset a gs)))
+	
+	    (when (stuck-in-wall? g a)
+	      (while (stuck-in-wall? g a) ; Back up if embedded in wall
+	        (set-actor-position a
+	                            (- (@a :x) (actor-xoffset a 1))
+	                            (- (@a :y) (actor-yoffset a 1))))
+		    (println (str (name (@a :nickname)) " got unstuck!!!"))
+	      (reverse-ghost-direction? g a))
+	
+		  ;; Check for tunnel exit  
+		  (tunnel-exit-check?! g a))
+    (do
+      nil #_(swap! a assoc :d :up :nd :up)) ; Make ghosts go up and down in pen
+   )
 
-    (when (stuck-in-wall? g a)
-      (while (stuck-in-wall? g a) ; Back up if embedded in wall
-        (set-actor-position a
-                            (- (@a :x) (actor-xoffset a 1))
-                            (- (@a :y) (actor-yoffset a 1))))
-	    (println (str (name (@a :nickname)) " got unstuck!!!"))
-      (reverse-ghost-direction? g a))
-
-	  ;; Check for tunnel exit  
-	  (tunnel-exit-check?! g a))
-
-  ;; If in pen, get out
-  (when (and (not= (@a :mode) :reincarnate) (in-pen? g a) (> (@a :x) (- (@g :midx) (/ (@g :halftile) 2))) (< (@a :x) (+ (@g :midx) (/ (@g :halftile) 2))))
-    (swap! a assoc :nd :up)
-    (set-actor-direction a :up))))
+  ;; Force ghosts to turn up when leaving pen
+  (when (leaving-pen? g a gs)
+    (swap! a assoc :d :up :nd :up))))
 
 (defn update-pacman-position?
   "Move Pac-Man in current direction and speed, if possible"
@@ -1300,7 +1310,7 @@
 				td (translate-direction a :forward)
         nr (+ r (actor-yoffset a 1))
         nc (+ c (actor-xoffset a 1))
-				n (mazetile (@g :maze) nr nc)
+				n (maze-tile (@g :maze) nr nc)
 			  clear-path (path-tile? n)] ; Only defined tiles
       (if (or clear-path (not (near-center-of-tile? g a 3))) ; Only stop if near center of tile
 				(do
@@ -1525,13 +1535,16 @@
   	    x (double (- (@ghost :x) half))
         y (double (- (@ghost :y) half))
         level (nth levels (dec (@g :level)))
-        flashtime (if (< (:frighttime level) 3) (:frighttime level) (round (/ (:frighttime level) 3)))
-        color (cond (and (> (elapsed g :blueclock) (- (:frighttime level) flashtime)) (= (@ghost :mode) :frightened)) (if (every g 250) (:white game-colors) (:ghostblue game-colors))
+        frighttime (:frighttime level)
+        flashtime (if (< frighttime 3) frighttime (round (/ frighttime 3)))
+        flashwhite (or (every g 250) (= (@g :paused) :level) (= (@g :paused) :death))
+        flash (and (= (@ghost :mode) :frightened) (> (elapsed g :blueclock) (- frighttime flashtime)))
+        color (cond flash (if flashwhite (:white game-colors) (:ghostblue game-colors))
 		                (= (@ghost :mode) :frightened) (:ghostblue game-colors)
                     :default (@ghost :c))
-        eyecolor (cond (and (> (elapsed g :blueclock) (- (:frighttime level) flashtime)) (= (@ghost :mode) :frightened)) (if (every g 250) (:red game-colors) (:peach game-colors))
-                    (= (@ghost :mode) :frightened) (:peach game-colors)
-                   :default (:white game-colors))
+        eyecolor (cond flash (if flashwhite (:red game-colors) (:peach game-colors))
+											 (= (@ghost :mode) :frightened) (:peach game-colors)
+											 :default (:white game-colors))
         thirdsize (round (* size 1/3))
         eye (round (/ size 3.4)) ; 3.3
         halfeye (round (/ eye 2))
@@ -2103,9 +2116,9 @@
    
     (mouseMoved [#^MouseEvent e]
       (let [#^JFrame me this] (.repaint me)))
-    
-    (mouseDragged [e])
 
+    (mouseDragged [e])
+    
     (keyPressed [#^KeyEvent e]
       (when (or (= (. e getKeyChar) \c)
                 (= (. e getKeyChar) \5))
@@ -2200,7 +2213,7 @@
                  center (@g :midx)
                  half (@g :halftile)]
 			       (when (and (not= (@g :paused) :death) (some {[r c] []} (@g :dots))) ; uneaten dot here?
-                (let [t (mazetile (@g :maze) r c)]
+                (let [t (maze-tile (@g :maze) r c)]
 									(eat-dot! g pacman r c t)
 								  
 					        ;; Keep track of dots eaten for pen exit
@@ -2310,7 +2323,6 @@
     (. (.getContentPane screen) setBackground Color/BLACK)
     (. (.getContentPane screen) setIgnoreRepaint true)
     (doto screen
-      (.setCursor Cursor/HAND_CURSOR)
       (.setResizable false) 
       (.setBackground Color/BLACK) (.setIgnoreRepaint true)
       (.addMouseMotionListener screen) (.addKeyListener screen))
