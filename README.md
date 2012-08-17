@@ -10,14 +10,16 @@ Some fruit graphics by Mikkel Christensen.
 Instructions:
 
 * 5 - insert coin
-* 1 - start game
-* arrow keys - move
+* 1 or 2 - start game
+* arrow keys - move player 1
+* ASDF - move player 2
 * P - pause
 * F1 or N - skip to next level
 * F2 - reset
-* S - toggle sound
-* A - toggle anti-aliasing
+* U - toggle sound
+* I - toggle anti-aliasing
 * T - toggle ghost telemetry and grid
+* R - random (autonomous) movement of Pac-Man
 * Esc or Q - quit
 
 To run:
