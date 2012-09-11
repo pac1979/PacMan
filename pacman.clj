@@ -583,7 +583,7 @@
 
              ;; Jr. Pac-Man
              {:level  6, :style :jrpacman :maze  5, :mazecolor :clydeorange,   :solidcolor :mazeblue,  :dotcolor :peach,       :fruit :trike,      :fruitpoints  100,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil :intervals [7 20 7 20 5 20 5]}
-	         {:level  7, :style :jrpacman :maze  6, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kite,      :fruitpoints  200,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil :intervals [7 20 7 20 5 1033 1/60]}
+	           {:level  7, :style :jrpacman :maze  6, :mazecolor :jrpacblue,    :solidcolor :jrpacbrown,  :dotcolor :yellow,       :fruit :kite,      :fruitpoints  200,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil :intervals [7 20 7 20 5 1033 1/60]}
              {:level  8, :style :jrpacman :maze  7, :mazecolor :clydeorange,    :solidcolor :jrpacblue,  :dotcolor :yellow,       :fruit :drum,      :fruitpoints  500,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil :intervals [7 20 7 20 5 1033 1/60]}
              {:level  9, :style :jrpacman :maze  8, :mazecolor :yellow,        :solidcolor :jrpacgreen,  :dotcolor :white,       :fruit :balloon,      :fruitpoints  700,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil :intervals [7 20 7 20 5 1033 1/60]}
              {:level 10, :style :jrpacman :maze  9, :mazecolor :cyan,        :solidcolor :mazeblue,  :dotcolor :white,       :fruit :train,      :fruitpoints  1000,  :pacspeed 1.80, :pacdotspeed 1.58, :ghostspeed 1.70, :ghosttunnelspeed 0.90, :elroy1dots  30 :elroy1speed 1.80 :elroy2dots 20 :elroy2speed 1.90 :frightpacspeed 1.90 :frightpacdotspeed 1.66 :frightghostspeed 1.10 :frighttime 7 :intermission nil :intervals [5 20 5 20 5 1037 1/60]}
@@ -611,6 +611,17 @@
              {:level 20, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :fruitkey,   :fruitpoints 5000, :pacspeed 1.00, :pacdotspeed 0.87, :ghostspeed 0.95, :ghosttunnelspeed 0.50, :elroy1dots 120 :elroy1speed 1.00 :elroy2dots 60 :elroy2speed 1.05 :frightpacspeed 1.00 :frightpacdotspeed 0.87 :frightghostspeed 0.60 :frighttime 0 :intermission nil :intervals [5 20 5 20 5 1037 1/60]}
              {:level 21, :style :pacman :maze  0, :mazecolor :mazeblue,      :solidcolor :black,  :dotcolor :peach,         :fruit :fruitkey,   :fruitpoints 5000, :pacspeed 0.95, :pacdotspeed 0.79, :ghostspeed 0.95, :ghosttunnelspeed 0.50, :elroy1dots 120 :elroy1speed 1.00 :elroy2dots 60 :elroy2speed 1.05 :frightpacspeed 1.00 :frightpacdotspeed 0.87 :frightghostspeed 0.60 :frighttime 0 :intermission nil :intervals [5 20 5 20 5 1037 1/60]}
              ])
+
+;; Data structures
+(defstruct ghost :nickname :c :dotlimit :dotcount :x :y :lastrow :lastcol :d :nd :s :mode :tx :ty :penx :peny :homer :homec :eatpause :reverse :modechange)
+(defn new-ghost [& [n c dotlimit dotcount x y lastrow lastcol d nd s mode tx ty penx peny homer homec eatpause reverse modechange]] (atom (struct ghost n c dotlimit dotcount x y lastrow lastcol d nd s mode tx ty penx peny homer homec eatpause reverse modechange)))
+
+(defstruct pacman :nickname :x :y :lastrow :lastcol :d :s :dotr :dotc :parked :waka :joystick)
+(defn new-pacman [& [n x y lastrow lastcol d s dotr dotc parked waka joystick]] (atom (struct pacman n x y lastrow lastcol d s dotr dotc parked waka joystick)))
+
+(defstruct game :maze :dots :mazerows :mazecolumns :midx :midc :joystick :joystick2 :h :w :tilesize :halftile :actorsize :halfactor :credits :highscore :sound :clock :boardclock :modeclock :blueclock :pauseclock :paused :fruitclock :fruit :bonusclock :dotclock :timer :level :style :ghostpoints :players :player :score1 :score2 :lives :bonuslife :globaldots :dotsleft :antialias :telemetry :demo :sirenclock :started)
+(defn new-game [& [maze dots mazerows mazecolumns midx midc joystick joystick2 h w tilesize halftile actorsize halfactor credits highscore sound clock boardclock modeclock blueclock pauseclock paused fruitclock fruit bonusclock dotclock timer level style ghostpoints players player score1 score2 lives bonuslife globaldots dotsleft antialias telemetry demo sirenclock started]]
+  (atom (struct game maze dots mazerows mazecolumns midx midc joystick joystick2 h w tilesize halftile actorsize halfactor credits highscore sound clock boardclock modeclock blueclock pauseclock paused fruitclock fruit bonusclock dotclock timer level style ghostpoints players player score1 score2 lives bonuslife globaldots dotsleft antialias telemetry demo sirenclock started)))
 
 ;; Basic math functions
 (defn abs [i] (if (< i 0.0) (- 0.0 i) i))
@@ -701,7 +712,7 @@
 (defn every
   "Returns true every given milliseconds"
   [g milliseconds]
-  (= (mod (bround (/ (- (@g :clock) (now)) milliseconds)) 2) 0))
+  (zero? (mod (bround (/ (- (@g :clock) (now)) milliseconds)) 2)))
 
 (defn elapsed
   "Returns the elapsed seconds on the given clock"
@@ -819,6 +830,14 @@
   "Returns whether actor is passing through pen gate"
   [g a]
   (let [r (ytorow g (@a :y))
+        c (xtocol g (@a :x))
+        t (maze-tile (@g :maze) r c)]
+	  (= t "-")))
+
+(defn below-gate?
+  "Returns whether actor is at the gate"
+  [g a]
+  (let [r (dec (ytorow g (@a :y)))
         c (xtocol g (@a :x))
         t (maze-tile (@g :maze) r c)]
 	  (= t "-")))
@@ -981,7 +1000,7 @@
   (let [n (next-tile g a d)
         r (ytorow g (@a :y))
         c (xtocol g (@a :x))]
-    (and (or (or (= d :left) (= d :right)) (and (> c 0) (< c (@g :mazecolumns)))) ; cannot turn up and down when deep in tunnel
+    (and (or (or (= d :left) (= d :right)) (and (> c 0) (< c (@g :mazecolumns)))) ; cannot turn up or down when deep in tunnel
          (path-tile? n) ; Only defined tiles
          (not (entering-pen? g d r c))))) ; Do not let Pac-Man enter pen
 
@@ -1054,11 +1073,10 @@
     (when (not (@a :reverse))
       (swap! a assoc :reverse true :lastcol c :lastrow r)) ; set reverse flag, remember current tile
     (when (or (near-center-of-tile? g a (* (@a :s) 2)) (and (@a :reverse) (new-ghost-tile? g a))) ; don't actually reverse until next tile
-      #_(swap! a assoc :reverse false :d nd :nd nd :lastrow 0 :lastcol 0)
-			(cond (ghost-openpath? g a nd) (swap! a assoc :reverse false :d nd :nd nd :lastrow 0 :lastcol 0) ; force recalc at next tile center
-		        (ghost-my-openpath? g a :left) (swap! a assoc :reverse false :d (translate-direction a :left) :nd (translate-direction a :left) :lastrow 0 :lastcol 0)
-		        (ghost-my-openpath? g a :right) (swap! a assoc :reverse false :d (translate-direction a :right) :nd (translate-direction a :right) :lastrow 0 :lastcol 0)
-            :default (swap! a assoc :reverse false)) ; clear flag if no reverse possible
+		(cond (ghost-openpath? g a nd) (swap! a assoc :reverse false :d nd :nd nd :lastrow 0 :lastcol 0) ; force recalc at next tile center
+	        (ghost-my-openpath? g a :left) (swap! a assoc :reverse false :d (translate-direction a :left) :nd (translate-direction a :left) :lastrow 0 :lastcol 0)
+	        (ghost-my-openpath? g a :right) (swap! a assoc :reverse false :d (translate-direction a :right) :nd (translate-direction a :right) :lastrow 0 :lastcol 0)
+        :default (swap! a assoc :reverse false)) ; clear flag if no reverse possible
 	    (println (str (name (@a :nickname)) " reversed direction from " (name od) " to " (name (@a :nd))))))))
 
 (defn set-ghost-mode
@@ -1070,7 +1088,8 @@
 		  (when (or (and (= (@g :style) :pacman) (= current-mode :scatter) (= mode :chase))
 		            (and (= current-mode :chase) (= mode :scatter))
                 (and (= current-mode :random) (= mode :chase)))
-		    (reverse-ghost-direction? g a)) ; reverse when switching between scatter/chase
+		    (reverse-ghost-direction? g a) ; reverse when switching between scatter/chase
+        (swap! a assoc :modechange (in-pen? g a))) ; make ghost turn right upon pen exit
 		  (swap! a assoc :mode mode))))
 
 (defn frighten-ghost!
@@ -1096,7 +1115,7 @@
 				  
 	        ;; Keep track of dots eaten for pen exit
 				  (swap! g assoc :dotclock (now))
-				  (when (< (@g :globaldots) 0)
+				  (when (neg? (@g :globaldots))
 	          (doseq [a [pinky inky clyde]]
 							(swap! a update-in [:dotcount] dec)))
 	        (swap! g update-in [:globaldots] inc)
@@ -1108,7 +1127,7 @@
 	
 	        ;; check level complete
 	        (when (and (not= (@g :paused) :level)
-	                   (= (@g :dotsleft) 0))
+	                   (zero? (@g :dotsleft)))
 		        (println "Level complete!")
 	          (swap! g assoc :paused :level :pauseclock (now)))))
 	
@@ -1134,7 +1153,7 @@
   "Employs unique targeting modes relative to Pac-Man from the tile in the ghost's given relative direction.
    This function is the core of the ghost AI, implementing specific rules about how ghosts choose
    their target location. The return value is a simple cartesian distance calculation in tiles."
-  [g a d p b]
+  [g a d p b] ; game/actor/direction/pacman/blinky
   (let [td (translate-direction a d) ; converts from relative to absolute
         pc (xtocol g (@p :x))
         pr (ytorow g (@p :y))
@@ -1143,10 +1162,10 @@
         m (@a :mode)
         mid (@g :midc)
         
-        ;; Calculate target tile. Default is Pac-Man himself. All other cases are special.
-        ttc (cond (= m :reincarnate) (dec mid) ; Return to pen
+        ;; Calculate target tile. Default is Pac-Man's current location. All other cases are special.
+        ttc (cond (= m :reincarnate) (xtocol g (@a :penx)) ; Return to pen
                   ;; Home corners
-                  (and (= n :shadow) (= m :scatter) (or (= (elroy-level g) 0) (< (elapsed g :boardclock) 10))) (@a :homec) ; Go to home corner every so often (except Cruise Elroy)
+                  (and (= n :shadow) (= m :scatter) (or (zero? (elroy-level g)) (< (elapsed g :boardclock) 15))) (@a :homec) ; Go to home corner every so often (except Cruise Elroy)
                   (and (not= n :shadow) (= m :scatter)) (@a :homec)
 
                   ;; Individual "personalities"
@@ -1159,18 +1178,17 @@
                   :default pc) ; Shadow targets Pac-Man directly
         ttr (cond (= m :reincarnate) 17
 
-                  (and (= n :shadow) (= m :scatter) (or (= (elroy-level g) 0) (< (elapsed g :boardclock) 10))) (@a :homer)
+                  (and (= n :shadow) (= m :scatter) (or (zero? (elroy-level g)) (< (elapsed g :boardclock) 15))) (@a :homer)
                   (and (not= n :shadow) (= m :scatter)) (@a :homer)
 
                   (= n :speedy) (+ pr (yoffset pd 4))
                   (= n :bashful) (- pr (- (ytorow g (@b :y)) (+ pr (yoffset pd 2))))
-                  (= n :pokey) (let [tiledist (tile-distance g a d pr pc)]
-                                 (if (< tiledist 8) 34 pr))
+                  (= n :pokey) (if (zero? ttc) 34 pr)
                   :default pr)
-        tc (cond (< ttc 0) 0
+        tc (cond (neg? ttc) 0
                  (> ttc (dec (@g :mazecolumns))) (dec (@g :mazecolumns))
                  :default ttc)
-        tr (cond (< ttr 0) 0
+        tr (cond (neg? ttr) 0
                  (> ttr (dec (@g :mazerows))) (dec (@g :mazerows))
                  :default ttr)
 				distance (tile-distance g a d tr tc)
@@ -1194,8 +1212,8 @@
 	     (do (set-actor-position a (coltox g (dec (+ tunnel-depth (dec (@g :mazecolumns))))), y)
 		       (println (str (name (@a :nickname)) " went through the left tunnel")))
 		   (when (and (= d :right) (= c (+ tunnel-depth (dec (@g :mazecolumns)))))
-		     (set-actor-position a (inc (- (coltox g 0) tunnel-depth)), y)
-	       (println (str (name (@a :nickname)) " went through the right tunnel")))))))
+		       (set-actor-position a (coltox g (inc (- tunnel-depth))), y)
+		       (println (str (name (@a :nickname)) " went through the right tunnel")))))))
 
 (defn stuck-in-wall?
   "Determines if actor is stuck in wall"
@@ -1203,6 +1221,14 @@
   (when-let [stuck (not (path-tile? (maze-tile (@g :maze) (ytorow g (@a :y)) (xtocol g (@a :x)))))]
     (println (str (name (@a :nickname)) " is stuck in a wall!"))
     stuck))
+
+(defn waiting-in-pen?
+  "Determines if actor is waiting in pen"
+  [g a]
+  (when-let [waiting (or (stuck-in-wall? g a)
+                         (and (= (@a :nickname) :speedy) (below-gate? g a)))] ; Pinky should reverse at gate while waiting
+    (println (str (name (@a :nickname)) " is waiting in the pen"))
+    waiting))
 
 (defn random-direction
   "Returns a random, translated, open direction for the ghost: left, right, or forward.
@@ -1254,7 +1280,7 @@
           rd (distance-to-target g a :right p b)
           fd (distance-to-target g a :forward p b)
           mid (@g :midc)
-          new-direction (cond (and (= d :up) (or (= r 14) (= r 15)) (or (= c mid) (= c (dec mid)))) (do (println "Leaving pen") (if (< (elapsed g :modeclock) 15) :left :right)) ; always turn left or right when leaving pen
+          new-direction (cond (and (= d :up) (or (= r 14) (= r 15)) (or (= c mid) (= c (dec mid)))) (do (println "Leaving pen") (if (@a :modechange) :right :left)) ; always turn left when leaving pen, unless mode has switched while inside
 	                            
                               (or (= (@a :mode) :frightened) (= (@a :mode) :random)) (random-direction g a)
                               
@@ -1285,8 +1311,8 @@
         level (nth levels (dec (@g :level)))
         t (maze-tile (@g :maze) r c)
         mid (@g :midc)
-        gs (cond (in-pen? g a) (* maxspeed (:ghosttunnelspeed level))  ; 40% slow down in pen
-                 (= (@a :mode) :reincarnate) (* maxspeed 1.05) ; speed up in reincarnate mode
+        gs (cond (= (@a :mode) :reincarnate) (* maxspeed 1.05) ; speed up in reincarnate mode
+                 (in-pen? g a) (* maxspeed (:ghosttunnelspeed level))  ; 40% slow down in pen
 								 (= (@a :mode) :frightened) (* maxspeed (:frightghostspeed level)) ; 50% slow down in frightened mode
                  (some #(= t %) ["#" "<" "X" "x" "-"]) (* maxspeed (:ghosttunnelspeed level))  ; 40% slow down in tunnels and pen
                  (and (= (@a :nickname) :shadow) (= (elroy-level g) 1)) (* maxspeed (:elroy1speed level)) ; speed-up in Cruise Elroy 1 mode
@@ -1305,13 +1331,15 @@
 
   ;; Move ghost
   (if (or pen-timeout
-            (>= (@g :globaldots) (@a :dotlimit))
-            (and (< (@g :globaldots) 0) (<= (@a :dotcount) 0))) ; Don't leave pen until Pac-Man has eaten enough dots
+          (>= (@g :globaldots) (@a :dotlimit))
+          (and (neg? (@g :globaldots)) (<= (@a :dotcount) 0))) ; Don't leave pen until Pac-Man has eaten enough dots
     (do
 	    (when pen-timeout
 	      (println "Releasing the next ghost!")
 	      (swap! g update-in [:globaldots] + 10) ; force the ghosts out of the pen over time if not enough dots eaten
 	      (swap! g assoc :dotclock (now)))
+      (when (and (not= (@a :mode) :reincarnate) (in-pen? g a) (or (= (@a :nickname) :bashful) (= (@a :nickname) :pokey)) (not (leaving-pen? g a gs)))
+        (swap! a assoc :y (rowtoy g 17) :d (if (< c mid) :right :left) :nd (if (< c mid) :right :left))) ; move towards exit of pen
 	    (set-actor-position a
 												  (+ (@a :x) (actor-xoffset a gs))
 												  (+ (@a :y) (actor-yoffset a gs)))
@@ -1327,12 +1355,30 @@
 		  ;; Check for tunnel exit  
 		  (tunnel-exit-check?! g a))
     (do
-      nil)
-   )
+      ;; Make ghosts go up and down in pen
+      (set-actor-position a
+												  (@a :x)
+												  (+ (@a :y) (actor-yoffset a gs)))
+      (when (waiting-in-pen? g a)
+	      (while (waiting-in-pen? g a) ; Reverse at pen wall
+	        (set-actor-position a
+	                            (@a :x)
+	                            (- (@a :y) (actor-yoffset a 1))))
+        (swap! a update-in [:d] opposite-direction)
+        (swap! a update-in [:nd] opposite-direction))))
 
   ;; Force ghosts to turn up when leaving pen
-  (when (leaving-pen? g a gs)
-    (swap! a assoc :d :up :nd :up))))
+  (when (and (not= (@a :d) :down) (leaving-pen? g a gs) (not= (@a :mode) :reincarnate))
+    (swap! a assoc :d :up :nd :up))
+  
+  (when (and (= (@a :mode) :reincarnate) (in-pen? g a))
+    (let [y (ytorow g (@a :y))
+          yp (ytorow g (@a :peny))]
+      (when (= y (dec yp))
+        (swap! a assoc :d :down :nd :down)) ; Force reincarnating ghosts to move down when returning to pen
+		  (when (= y yp)
+		    (let [d (if (= (@a :nickname) :bashful) :left :right)]
+		      (swap! a assoc :d d :nd d))))))) ; Force reincarnating ghosts to return to their position in pen
 
 (defn update-pacman-position?
   "Move Pac-Man in current direction and speed, if possible"
@@ -1395,17 +1441,7 @@
 (defn reincarnated?
   "Determines if ghost achieved reincarnation (i.e. eyes returned to pen)"
   [g a]
-  (and (= (@a :mode) :reincarnate) (in-pen? g a)))
-
-(defstruct ghost :nickname :c :dotlimit :dotcount :x :y :lastrow :lastcol :d :nd :s :mode :tx :ty :homer :homec :eatpause :reverse)
-(defn new-ghost [& [n c dotlimit dotcount x y lastrow lastcol d nd s mode tx ty homer homec eatpause]] (atom (struct ghost n c dotlimit dotcount x y lastrow lastcol d nd s mode tx ty homer homec eatpause)))
-
-(defstruct pacman :nickname :x :y :lastrow :lastcol :d :s :dotr :dotc :parked :waka :joystick)
-(defn new-pacman [& [n x y lastrow lastcol d s dotr dotc parked waka joystick]] (atom (struct pacman n x y lastrow lastcol d s dotr dotc parked waka joystick)))
-
-(defstruct game :maze :dots :mazerows :mazecolumns :midx :midc :joystick :joystick2 :h :w :tilesize :halftile :actorsize :halfactor :credits :highscore :sound :clock :boardclock :modeclock :blueclock :pauseclock :paused :fruitclock :fruit :bonusclock :dotclock :timer :level :style :ghostpoints :players :player :score1 :score2 :lives :bonuslife :globaldots :dotsleft :antialias :telemetry :demo :sirenclock :started)
-(defn new-game [& [maze dots mazerows mazecolumns midx midc joystick joystick2 h w tilesize halftile actorsize halfactor credits highscore sound clock boardclock modeclock blueclock pauseclock paused fruitclock fruit bonusclock dotclock timer level style ghostpoints players player score1 score2 lives bonuslife globaldots dotsleft antialias telemetry demo sirenclock started]]
-  (atom (struct game maze dots mazerows mazecolumns midx midc joystick joystick2 h w tilesize halftile actorsize halfactor credits highscore sound clock boardclock modeclock blueclock pauseclock paused fruitclock fruit bonusclock dotclock timer level style ghostpoints players player score1 score2 lives bonuslife globaldots dotsleft antialias telemetry demo sirenclock started)))
+  (and (= (@a :mode) :reincarnate) (in-pen? g a) (= (xtocol g (@a :x)) (xtocol g (@a :penx))) ))
 
 (defn set-game-joystick [g j d]
   (println (str "Player moved joystick " j " " (name d)))
@@ -1441,8 +1477,9 @@
   "Reincarnates the ghost in the pen"
   [g a]
   (println (str (name (@a :nickname)) " is reincarnated"))
-  (swap! a assoc :x (@g :midx) :y (rowtoy g 17) :d :up :nd :up)
-  (set-ghost-mode g a :scatter))
+  (swap! a assoc :x (@a :penx) :y (@a :peny) :d :down :nd :down :modechange false :mode :chase) ; seed the mode with something other than reincarnate
+  ;;(swap! a assoc :x (@g :midx) :y (rowtoy g 17) :d :down :nd :down :modechange false :mode :chase) ; seed the mode with something other than reincarnate
+  (swap! a assoc :mode (mode-interval g a (elapsed g :modeclock)))) ; choose the current mode
 
 (defn reset-dot-counters
   "Sets pen exit times for ghosts based on level"
@@ -1471,7 +1508,7 @@
 							          :y (rowtoy g 26)
 			                  :lastrow 0
 			                  :lastcol 0
-				                :d (if (and (@g :demo) (= (rand-int 2) 0)) :right :left)
+				                :d (if (and (@g :demo) (zero? (rand-int 2))) :right :left)
 	                      :s (* maxspeed (:pacspeed level))
                         :joystick :joystick)
 	  (swap! mspacman assoc :x (- (@g :midx) (@g :tilesize))
@@ -1487,14 +1524,22 @@
 			(swap! a assoc :s (* maxspeed (:ghostspeed level))
                      :lastrow 0 :lastcol 0
                      :reverse false
+                     :modechange false
                      :mode :scatter
                      :tx 0 :ty 0))
 
     ; unique ghost settings
 	  (swap! blinky assoc :x mid                                :y (rowtoy g 14) :homec (- (@g :mazecolumns) 3) :homer 0                    :d :left  :nd :left  :eatpause :eat-blinky)
-    (swap! pinky assoc  :x mid                                :y py            :homec 2                       :homer 0                    :d :up    :nd :up    :eatpause :eat-pinky)
-    (swap! inky assoc   :x (+ 2 (- mid (* (@g :tilesize) 2))) :y py            :homec (dec (@g :mazecolumns)) :homer (- (@g :mazerows) 2) :d :right :nd :right :eatpause :eat-inky)
-    (swap! clyde assoc  :x (- (+ mid (* (@g :tilesize) 2)) 2) :y py            :homec 0                       :homer (- (@g :mazerows) 2) :d :left  :nd :left  :eatpause :eat-clyde)
+    (swap! pinky assoc  :x mid                                :y py            :homec 2                       :homer 0                    :d :down  :nd :down  :eatpause :eat-pinky)
+    (swap! inky assoc   :x (+ (- mid (* (@g :tilesize) 2)) 2) :y py            :homec (dec (@g :mazecolumns)) :homer (- (@g :mazerows) 2) :d :up    :nd :up    :eatpause :eat-inky)
+    (swap! clyde assoc  :x (- (+ mid (* (@g :tilesize) 2)) 2) :y py            :homec 0                       :homer (- (@g :mazerows) 2) :d :up    :nd :up    :eatpause :eat-clyde)
+    (doseq [a [pinky inky clyde]]
+			(swap! a assoc :penx (@a :x) :peny (@a :y))) ; default pen position
+		(swap! blinky assoc :penx (@pinky :x) :peny (@pinky :y)) ; blinky same as pinky
+
+    ; special settings for inky and clyde
+    (swap! inky assoc   :lastrow (ytorow g (@inky :y)) :lastcol (xtocol g (@inky :x)))
+    (swap! clyde assoc  :lastrow (ytorow g (@clyde :y)) :lastcol (xtocol g (@clyde :x)))
 
     (when (not= (@g :paused) :intermission)
 	    (swap! g assoc :paused :start :pauseclock (now)))
@@ -1562,8 +1607,8 @@
 	                        (= d :left)  (if (and (not parked) e125) 195 225)
 	                        (= d :down)  (if (and (not parked) e125) 285 315))
 	      ;; make mouth chomp every 1/16 second if Pac-Man is moving
-	      mouth-wide (cond (or (and (not= (@g :paused) :intermission) (< board-seconds 5)) ; wait a few seconds at the start of each life
-	                           (= (@g :paused) :death)
+	      mouth-wide (cond (or (= (@g :paused) :start) ; wait a few seconds at the start of each life
+                             (= (@g :paused) :death)
 	                           (= (@g :paused) :level)
 	                           (and (not parked)
 	                                (every g 62))) 360 ; full circle (mouth closed)
@@ -1626,7 +1671,7 @@
          (. poly (addPoint (+ x size) gy))
          (. poly (addPoint (- (+ x size) taper) (dec (+ y half))))
          (. poly (addPoint (+ x taper) (dec (+ y half))))
-         (if (and (not= (@g :paused) :death) (not= (@g :paused) :level) (every g 142))
+         (if (or (and (not= (@g :paused) :level) (every g 142)) (= (@g :paused) :start)) ; show four-section gown initially
            (do
              ;; Four gown sections
 		         (. poly (addPoint x gy))
@@ -1679,7 +1724,8 @@
 		           ;; frown
 		           (let [fx (+ x (round (/ size 8.8)))
 		                 fy (+ y (* half 1.25))
-	                     fy2 (+ y (* half 1.15))
+                     fy2 (+ y (* half 1.15))
+		                 ;fs (* size 0.28)
 		                 fs (* size 0.165)]
 				         (.setStroke gr thick)
 		             (.drawArc gr fx, fy fs, fs 30 150)
@@ -1998,7 +2044,7 @@
 	                                                  (.drawArc gr (- ox size half), (- oy size half) doublesize, doublesize 270, 90))
                                       (= c "●") (when (and (@g :started) ; don't show energizers until game starts
                                                          (some {[rowindex colindex] []} (@g :dots))) ; only show uneaten energizers
-		                                              (.setColor gr (if e250 Color/BLACK ((:dotcolor (nth levels (dec (@g :level)))) game-colors))) ; make energizer dots blink
+		                                              (.setColor gr (if (and e250 (not= (@g :paused) :start)) Color/BLACK ((:dotcolor (nth levels (dec (@g :level)))) game-colors))) ; make energizer dots blink
                                                   (.fillOval gr x, halfup size, size))
                                       (= c "█") (do (when solid (.setColor gr solidcolor)
 						                                                    (.fillRect gr x, halfup size, size)))
@@ -2058,13 +2104,13 @@
            ;; high score
            (.drawString gr "HIGH" (- (coltox g (- mid 5)) halftile) (+ (rowtoy g 0) half))
            (.drawString gr "SCORE" (- (coltox g mid) halftile) (+ (rowtoy g 0) half))
-           (when (> (@g :highscore) 0)
+           (when (pos? (@g :highscore))
 	           (.drawString gr highscore (- (coltox g (- (+ mid 3) (count highscore))) halftile) (+ (rowtoy g 1) half)))
           
            ;; level
            (draw-levels g gr)
 
-           ;; Draw players and objects on board
+					 ;; Draw players and objects on board
            (if (@g :started)
              (let [board-seconds (elapsed g :boardclock)
                    game-seconds (elapsed g :clock)
@@ -2078,7 +2124,7 @@
                    (.setColor gr Color/CYAN)
 									 (.drawString gr "PLAYER" (- (coltox g (- mid 5)) halftile) (+ (rowtoy g 14) halftile))
 									 (.drawString gr "ONE" (- (coltox g (+ mid 2)) halftile) (+ (rowtoy g 14) halftile)))
-                 (when (< board-seconds 3)
+                 (when (= (@g :paused) :start)
                    (.setColor gr Color/YELLOW)
 									 (.drawString gr "READY!" (- (coltox g (- mid 3)) halftile) (+ (rowtoy g 20) halftile)))
 
@@ -2164,7 +2210,11 @@
 						                (>= (elapsed g :sirenclock) (if (= (@g :style) :pacman) 0.435 0.394))) ; play siren every 435ms
                    (swap! g assoc :sirenclock (now))
                    (when (= (@g :paused) :none) 
-                     (play-sound g :siren))))
+                     (play-sound g (cond true :siren
+                                         (> (@g :dotsleft) 207) :siren1
+                                         (> (@g :dotsleft) 138) :siren2
+                                         (> (@g :dotsleft) 20) :siren3
+                                         :default :siren4)))))
              ;;else draw Game Over mode
              (doto gr
 		           ;; marquis art 
@@ -2195,7 +2245,7 @@
         (swap! g update-in [:credits] inc)
 				(let [#^JFrame me this] 
 		       (.repaint me)))
-      (when (and (not (@g :started)) (> (@g :credits) 0) (= (. e getKeyChar) \1))
+      (when (and (not (@g :started)) (pos? (@g :credits)) (= (. e getKeyChar) \1))
         (swap! g update-in [:credits] dec)
         (reset-game! g pacman mspacman blinky pinky inky clyde)
         (start-game! g 1))
@@ -2281,7 +2331,7 @@
 			            pc (xtocol g (@a :x))]
 		          (when (or (@a :parked) (not= (@a :lastrow) pr) (not= (@a :lastcol) pc))
 				        (swap! a assoc :lastrow pr :lastcol pc) 
-							  (swap! g assoc (@a :joystick) (let [rd (rand-int (if (@a :parked) 2 4))] (cond (= rd 0) (translate-direction a :left) (= rd 1) (translate-direction a :right) :default (translate-direction a :forward))))))))
+							  (swap! g assoc (@a :joystick) (let [rd (rand-int (if (@a :parked) 2 4))] (cond (zero? rd) (translate-direction a :left) (= rd 1) (translate-direction a :right) :default (translate-direction a :forward))))))))
 
         ;; move in direction of joystick
         (doseq [a players]
@@ -2313,7 +2363,7 @@
             (update-ghost-position! g a pacman blinky))))
 	     
       ;; release pause after first few seconds of life
-      (when (and (= (@g :paused) :start) (> (elapsed g :pauseclock) 5))
+      (when (and (= (@g :paused) :start) (> (elapsed g :pauseclock) (if (and (= (@g :level) 1) (= (@g :lives) 3)) 5 3))) ; longer pause at game beginning
         (swap! g assoc :paused :none))
        
       ;; check for bonus life
@@ -2336,7 +2386,7 @@
 				(when (reincarnated? g a) (reset-ghost! g a)))
        
       ;; check game over
-      (when (= (@g :lives) 0) (stop-game! g))
+      (when (zero? (@g :lives)) (stop-game! g))
 
       ;; reset at end of level
       (when (and (= (@g :paused) :level) (>= (elapsed g :pauseclock) 3))  ; Pause for 3 seconds at end of level
